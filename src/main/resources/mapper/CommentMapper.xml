@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lpepsi.vblog.dao.CommentMapper">
+    <resultMap id="CommentMap" type="top.lpepsi.vblog.vdo.CommentDO">
+        <id column="id" property="id"/>
+        <result column="articleId" property="article_id"/>
+        <result column="commentName" property="comment_name"/>
+        <result column="replyName" property="reply_name"/>
+        <result column="comment" property="comment"/>
+        <result column="createBy" property="create_by"/>
+        <result column="parentId" property="parent_id"/>
+        <collection property="childComments" ofType="top.lpepsi.vblog.vdo.CommentDO" select="getChildComment" column="id"/>
+    </resultMap>
+    <select id="getChildComment" resultMap="CommentMap">
+        SELECT
+            *
+        FROM
+            blog_article_comment
+        WHERE
+            blog_article_comment.parent_id = #{id}
+    </select>
+    <select id="getCommentsByArticleId" resultMap="CommentMap">
+        SELECT
+            *
+        FROM
+            blog_article_comment
+        WHERE
+            article_id =  #{articleId}
+    </select>
+    <insert id="saveComment" parameterType="top.lpepsi.vblog.dto.Comment">
+        INSERT INTO
+            <if test="articleId == null">
+                blog_article_comment(comment_name,`comment`,reply_name,parent_id) VALUES(#{commentName},#{comment},#{replyName},#{parentId})
+            </if>
+            <if test="articleId != null">
+                blog_article_comment(article_id,comment_name,`comment`,reply_name,parent_id) VALUES(#{articleId},#{commentName},#{comment},#{replyName},#{parentId})
+            </if>
+    </insert>
+</mapper>

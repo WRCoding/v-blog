@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lpepsi.vblog.dao.LikeMapper">
+    <select id="getLikeStatus" resultType="likeDO">
+        SELECT * FROM blog_user_like WHERE blog_user_like.user_name= #{username} AND blog_user_like.article_id= #{articleId}
+    </select>
+
+    <select id="getLikedCountByIdFromDB" resultType="int">
+        select like_num FROM blog_article_info where blog_article_info.id = #{articleId}
+    </select>
+
+    <insert id="saveLikedCount2DB" parameterType="likeCount">
+        UPDATE blog_article_info SET blog_article_info.like_num = #{likeNum} WHERE blog_article_info.id = #{articleId}
+    </insert>
+
+    <insert id="saveUserLikedStatus2DB" parameterType="likeDO">
+        INSERT INTO blog_user_like(user_name,article_id,like_status)VALUES (#{username},#{articleId},#{likeStatus})
+    </insert>
+
+    <update id="updateUserLikedStatus2DB" parameterType="likeDO">
+         UPDATE blog_user_like SET like_status = #{likeStatus} WHERE user_name = #{username} AND article_id = #{articleId}
+    </update>
+</mapper>

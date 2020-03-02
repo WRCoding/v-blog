@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lpepsi.vblog.dao.TagMapper">
+    <insert id="saveTag2DB" parameterType="string" useGeneratedKeys = "true" keyProperty = "id" keyColumn = "id">
+        INSERT INTO blog_tag(tag_name)VALUES (#{tagName}) ON DUPLICATE KEY UPDATE tag_number = tag_number + 1
+    </insert>
+    <insert id="tagToArticle" >
+        insert into blog_info_sort(sort_id,article_id) values (#{tagId},#{articleId})
+    </insert>
+    <select id="getTags" resultType="tagDO">
+        SELECT * FROM blog_tag
+    </select>
+</mapper>

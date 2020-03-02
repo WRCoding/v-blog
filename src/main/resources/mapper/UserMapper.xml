@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lpepsi.vblog.dao.UserMapper">
+    <select id="findUserByuserName" parameterType="string" resultType="userDo">
+      select * from blog_user where email = #{userName}
+    </select>
+    <insert id="register" parameterType="userDo">
+        INSERT INTO blog_user ( email, password, username, role )VALUES(#{email},#{password},#{userName},#{role})
+    </insert>
+    <select id="getEmailByUserName" parameterType="string" resultType="string">
+        SELECT email FROM blog_user WHERE username = #{username}
+    </select>
+    <update id="updateStatus" parameterType="string">
+            UPDATE blog_user SET `status` = 1 WHERE username = #{username}
+    </update>
+    <insert id="saveUserView2DB">
+        INSERT INTO blog_user_view(user_name,view) VALUES (#{username},#{view}) ON DUPLICATE KEY UPDATE view = #{view}
+    </insert>
+
+    <select id="checkInfoEmail" resultType="int" parameterType="string">
+        SELECT count(email) FROM blog_user WHERE email = #{email}
+    </select>
+    <select id="checkInfoName" resultType="int" parameterType="string">
+        SELECT count(username) FROM blog_user WHERE username = #{name}
+    </select>
+</mapper>

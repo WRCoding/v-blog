@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lpepsi.vblog.dao.BlogMapper">
+    
+    <resultMap id="Blogs" type="top.lpepsi.vblog.dto.Blog">
+        <id property="id" column="id"/>
+        <result property="author" column="author"/>
+        <result property="articleTitle" column="article_title"/>
+        <result property="articleViews" column="article_views"/>
+        <result property="createBy" column="create_by"/>
+        <result property="likeNum" column="like_num"/>
+        <result property="titleImage" column="image_url"/>
+        <collection property="tags" resultMap="tags"></collection>
+    </resultMap>
+    <resultMap id="detail" type="top.lpepsi.vblog.dto.Detail">
+        <id property="id" column="id"/>
+        <result property="author" column="author"/>
+        <result property="articleTitle" column="article_title"/>
+        <result property="articleViews" column="article_views"/>
+        <result property="createBy" column="create_by"/>
+        <result property="likeNum" column="like_num"/>
+        <result property="titleImage" column="image_url"/>
+        <result property="articleContent" column="article_content"/>
+        <collection property="tags" resultMap="tags"></collection>
+    </resultMap>
+    <resultMap id="tags" type="top.lpepsi.vblog.vdo.TagDO">
+        <id property="id" column="tag_id"/>
+        <result property="tagName" column="tag_name"/>
+    </resultMap>
+
+    <select id="blogs" resultMap="Blogs">
+        SELECT
+            blog_article_info.id,
+            author,
+            article_title,
+            image_url,
+            tag_name,
+            blog_article_info.create_by,
+            article_views,
+            like_num
+        FROM
+            (
+                ( ( blog_article_info LEFT JOIN blog_article_image ON blog_article_info.id = blog_article_image.article_id ) LEFT JOIN blog_info_sort ON blog_article_info.id = blog_info_sort.article_id )
+                LEFT JOIN blog_tag ON blog_info_sort.sort_id = blog_tag.id
+            )
+        WHERE
+            blog_article_info.is_delete = 0
+            AND blog_sort.is_effective = 1
+        ORDER BY
+            blog_article_info.create_by DESC
+    </select>
+
+    <select id="detailBlogs" resultMap="detail">
+        SELECT
+            blog_article_info.id,
+            blog_article_info.author,
+            article_title,
+            article_content,
+            image_url,
+            article_views,
+            blog_article_info.create_by,
+            blog_article_info.like_num,
+            blog_tag.tag_name
+        FROM
+            (
+                ( ( blog_article_info LEFT JOIN blog_article_content ON blog_article_info.id = blog_article_content.article_id ) LEFT JOIN blog_article_image ON blog_article_info.id = blog_article_image.article_id )
+                LEFT JOIN blog_info_sort ON blog_info_sort.article_id = blog_article_info.id
+            )
+            LEFT JOIN blog_tag ON blog_tag.id = blog_info_sort.sort_id ORDER BY blog_article_info.create_by DESC
+    </select>
+
+    <select id="findBlog" resultMap="detail">
+        SELECT
+            blog_article_info.id,
+            blog_article_info.author,
+            article_title,
+            article_content,
+            image_url,
+            article_views,
+            blog_article_info.create_by,
+            blog_article_info.like_num,
+            blog_tag.tag_name
+        FROM
+            (
+                ( ( blog_article_info LEFT JOIN blog_article_content ON blog_article_info.id = blog_article_content.article_id ) LEFT JOIN blog_article_image ON blog_article_info.id = blog_article_image.article_id )
+                LEFT JOIN blog_info_sort ON blog_info_sort.article_id = blog_article_info.id
+            )
+            LEFT JOIN blog_tag ON blog_tag.id = blog_info_sort.sort_id
+        WHERE
+            blog_article_info.id = #{blogId}
+    </select>
+
+    <select id="findBlogByTagName" resultMap="detail">
+    SELECT
+        blog_article_info.id,
+        blog_article_info.author,
+        article_title,
+        article_content,
+        image_url,
+        article_views,
+        blog_article_info.create_by,
+        blog_article_info.like_num,
+        blog_tag.tag_name
+    FROM
+        (
+            ( ( blog_article_info LEFT JOIN blog_article_content ON blog_article_info.id = blog_article_content.article_id ) LEFT JOIN blog_article_image ON blog_article_info.id = blog_article_image.article_id )
+            LEFT JOIN blog_info_sort ON blog_info_sort.article_id = blog_article_info.id
+        )
+        LEFT JOIN blog_tag ON blog_tag.id = blog_info_sort.sort_id
+    WHERE
+        blog_tag.tag_name = #{tagName}
+    ORDER BY
+        blog_article_info.create_by DESC
+    </select>
+
+    <insert id="saveBlog2DB" parameterType="top.lpepsi.vblog.dto.Edit" useGeneratedKeys = "true" keyProperty = "id" keyColumn = "id">
+        insert into blog_article_info(author,article_title) values (#{author},#{title})
+    </insert>
+    <insert id="saveContent2DB" parameterType="top.lpepsi.vblog.dto.Edit">
+        insert into blog_article_content(article_content,article_id)values(#{content},#{id})
+    </insert>
+    <insert id="saveImage2DB" parameterType="top.lpepsi.vblog.dto.Edit">
+        insert into blog_article_image(article_id,image_url)values(#{id},#{titleImageUrl})
+    </insert>
+    <update id="saveBlogView">
+        UPDATE blog_article_info SET article_views = #{num} WHERE id = #{articleId}
+    </update>
+
+</mapper>
