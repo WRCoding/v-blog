@@ -56,7 +56,12 @@ public class LoginAndRegController {
     @PostMapping("/check")
     @ResponseBody
     public Response check(@RequestParam("email")String email,@RequestParam("name")String name){
-        LOGGER.info(email+name);
         return userService.checkInfo(email, name);
+    }
+
+    @GetMapping("/auth")
+    @ResponseBody
+    public Response auth(){
+        return null;
     }
 }

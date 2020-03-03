@@ -1,7 +1,10 @@
 > 之前用SpringBoot+Thymeleaf写了[个人博客](https://blog.csdn.net/qq_40866897/article/details/98040475)，这次又来炒冷饭，用新的技术来重构个人博客，并把它变成开放式的，目前水平有限，欢迎大家一起讨论提建议
 
 为啥叫它轻博客，这是临时想的名字，因为目前它的功能没有那么多，很简单的一些功能，为了不太Low就取个比较清新的叫法，之前是想叫VBlog，但是后面发现有大佬已经写了个叫VBlog的了，还是别跟人家重名好了。。。
-
+配置文件因为有比较机密的配置，所以上传的是github的，大家根据需要再自己改
+数据库文件也已经上传，只有结构，数据需要自己添加
+[GitHub](https://github.com/WRCoding/v-blog)
+[VBlog](http://www.lpepsi.top/)
 本次使用的技术有：
 **前端**
  - Vue
@@ -40,6 +43,9 @@
 **标签**
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200301234912606.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODY2ODk3,size_16,color_FFFFFF,t_70)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200301234928990.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODY2ODk3,size_16,color_FFFFFF,t_70)
+**文章搜索**
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200303160950767.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODY2ODk3,size_16,color_FFFFFF,t_70)
+
 **详情页**
 ![**在这里插入图片描述**](https://img-blog.csdnimg.cn/20200301235047541.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODY2ODk3,size_16,color_FFFFFF,t_70)
 后面会写个配套的小程序，慢慢来

@@ -55,7 +55,6 @@ public class BlogController {
     @PostMapping("/article")
     @ResponseBody
     public Response createBlog(@RequestBody Edit edit){
-        LOGGER.info("edit: "+edit);
         return blogService.saveBlog2DB(edit);
     }
 

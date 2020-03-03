@@ -1,7 +1,6 @@
 package top.lpepsi.vblog.es;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import top.lpepsi.vblog.dto.Detail;
 

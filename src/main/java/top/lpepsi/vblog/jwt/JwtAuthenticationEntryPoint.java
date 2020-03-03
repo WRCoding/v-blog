@@ -29,7 +29,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response = ResponseUtil.set(response);
-        String json = JSON.toJSONString(Response.customize(ResultCode.ACCESS_DENY, "会话超时，请重新登录"));
+        String json = JSON.toJSONString(Response.customize(ResultCode.ACCESS_DENY, "会话超时或未登录，请重新登录"));
         LOGGER.info("json: "+json);
         response.getWriter().write(json);
     }

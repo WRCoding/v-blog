@@ -155,6 +155,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     private void saveBlog2Redis(Detail detail){
+        esBlogService.create(detail);
         redisService.saveBlog2Redis(detail);
     }
 }
