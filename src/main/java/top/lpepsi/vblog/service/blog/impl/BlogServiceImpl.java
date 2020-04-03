@@ -23,6 +23,7 @@ import top.lpepsi.vblog.service.tag.impl.TagServiceImpl;
 import top.lpepsi.vblog.utils.MarkDownToHtmlUtil;
 import top.lpepsi.vblog.utils.RedisUtil;
 import top.lpepsi.vblog.vdo.ArticleDO;
+import top.lpepsi.vblog.vdo.ResultCode;
 import top.lpepsi.vblog.vdo.TagDO;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public Response<Object> findBlog(Integer articleId) {
+    public Response findBlog(Integer articleId) {
         if (null == articleId){
             return Response.failure("articleId为空");
         }
@@ -145,6 +146,7 @@ public class BlogServiceImpl implements BlogService {
         redisUtil.delete(RedisKeyConstant.BLOG_LIST);
         saveBlogs2Redis();
     }
+
 
     private void saveBlogs2Redis(){
         if (!redisUtil.hasKey(RedisKeyConstant.BLOG)){

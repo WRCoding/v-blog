@@ -3,6 +3,7 @@ package top.lpepsi.vblog.controller.tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.lpepsi.vblog.dto.Response;
 import top.lpepsi.vblog.service.tag.impl.TagServiceImpl;
@@ -28,5 +29,16 @@ public class TagController {
     @ResponseBody
     public Response getBlogByTag(){
         return tagService.getBlogByTag();
+    }
+
+    /**
+     * 小程序用
+     * @param key
+     * @return
+     */
+    @GetMapping("/tag/{key}")
+    @ResponseBody
+    public Response getBlogWithTag(@PathVariable("key")String key){
+        return tagService.getBlogWithTag(key);
     }
 }

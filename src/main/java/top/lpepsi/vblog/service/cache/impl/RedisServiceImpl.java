@@ -90,9 +90,12 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public Detail getBlogFromRedis(String key) {
         Detail detail = (Detail) redisUtil.hashGet(RedisKeyConstant.BLOG, key);
+        if (detail == null){
+            return null;
+        }
         //获取访问量
         Double views = redisUtil.zSetGetScore(RedisKeyConstant.VIEW, key);
-        double number = views;
+        double number = views == null ? 0 : views;
         //设置访问量
         detail.setArticleViews((int)number);
         return detail;

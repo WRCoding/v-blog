@@ -22,7 +22,12 @@ public enum ResultCode {
     /**
      * 没有权限
      */
-    ACCESS_DENY(5001,"没有权限")
+    ACCESS_DENY(5001,"没有权限"),
+
+    /**
+     * 参数无效
+     */
+    INVALID_ARGUMENT(5007,"参数无效")
     ;
     private Integer code;
     private String message;

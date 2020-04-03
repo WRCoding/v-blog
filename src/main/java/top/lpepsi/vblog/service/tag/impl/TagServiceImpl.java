@@ -94,4 +94,13 @@ public class TagServiceImpl implements TagService {
         Map<String,List<Detail>> map = redisUtil.hashGetEntry(RedisKeyConstant.TAG_BLOG);
         return Response.success(map);
     }
+
+    @Override
+    public Response getBlogWithTag(String key) {
+        if (null == key){
+            return Response.failure("标签不存在");
+        }
+        List<Detail> blogList = (List<Detail>) redisUtil.hashGet(RedisKeyConstant.TAG_BLOG, key);
+        return Response.success(blogList);
+    }
 }

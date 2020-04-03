@@ -33,3 +33,4 @@ build/
 !/src/main/resources/application-dev.yml
 !/src/main/resources/application.yml
 !/.gitignore
+!/src/main/java/top/lpepsi/vblog/constant/AliyunOssConfigConstant.java

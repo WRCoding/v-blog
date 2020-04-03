@@ -37,14 +37,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(JwtTokenUtil.TOKEN_HEARER);
         try {
             if (token == null || JwtTokenUtil.isExpiration(token)){
-                LOGGER.info("token: "+token);
+                LOGGER.info("我还没登录");
                 chain.doFilter(request,response);
             }else {
                 SecurityContextHolder.getContext().setAuthentication(getAuthentication(token));
                 super.doFilterInternal(request, response, chain);
             }
         } catch (ExpiredJwtException e) {
-            LOGGER.error("token过期了");
+            LOGGER.error("我登录了，但token过期了");
             chain.doFilter(request,response);
         }
     }

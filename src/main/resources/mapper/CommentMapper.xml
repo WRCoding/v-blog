@@ -15,7 +15,7 @@
     </resultMap>
     <select id="getChildComment" resultMap="CommentMap">
         SELECT
-            *
+            id,article_id,comment_name,reply_name,comment,create_by,parent_id
         FROM
             blog_article_comment
         WHERE
@@ -23,7 +23,7 @@
     </select>
     <select id="getCommentsByArticleId" resultMap="CommentMap">
         SELECT
-            *
+            id,article_id,comment_name,reply_name,comment,create_by,parent_id
         FROM
             blog_article_comment
         WHERE

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lpepsi.vblog.dao.AdminMapper">
+    <resultMap id="detail" type="top.lpepsi.vblog.dto.Detail">
+        <id property="id" column="id"/>
+        <result property="articleTitle" column="article_title"/>
+        <result property="articleViews" column="article_views"/>
+        <result property="createBy" column="create_by"/>
+        <result property="likeNum" column="like_num"/>
+    </resultMap>
+    <select id="blogManager" parameterType="string" resultMap="detail">
+        SELECT
+            id,
+            article_title,
+            article_views,
+            like_num,
+            create_by
+        FROM
+            blog_article_info
+        WHERE
+            author = #{username}
+        ORDER BY
+            create_by DESC
+    </select>
+    <select id="getCommentNum" parameterType="string" resultType="int">
+        SELECT COUNT(`comment`) FROM blog_article_comment WHERE article_id IN (SELECT id FROM blog_article_info WHERE author = #{username})
+    </select>
+    <select id="getCommentChileNum" parameterType="string" resultType="int">
+    SELECT
+        COUNT( `comment` )
+    FROM
+        blog_article_comment
+    WHERE
+        parent_id IN ( SELECT id FROM blog_article_comment WHERE article_id IN ( SELECT id FROM blog_article_info WHERE author = #{username} ) )
+    </select>
+    <select id="getBlogNum" parameterType="string" resultType="int">
+        SELECT COUNT(id) FROM blog_article_info WHERE author = #{username}
+    </select>
+    <select id="getViewNum" parameterType="string" resultType="int">
+        SELECT `view` FROM blog_user_view WHERE user_name = #{username}
+    </select>
+
+    <update id="updateBlogTitle" parameterType="top.lpepsi.vblog.dto.Edit">
+        UPDATE blog_article_info SET article_title = #{title} WHERE id = #{id}
+    </update>
+
+    <update id="updateBlogContent" parameterType="top.lpepsi.vblog.dto.Edit">
+        UPDATE blog_article_content SET article_content = #{content} WHERE article_id = #{id}
+    </update>
+
+</mapper>

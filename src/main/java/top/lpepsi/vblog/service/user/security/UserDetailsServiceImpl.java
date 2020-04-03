@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username){
         UserDO user = userMapper.findUserByuserName(username);
         if (user == null){
-            throw new BadCredentialsException("用户名不存在");
+            throw new BadCredentialsException("邮箱不存在");
         }
         if (user.getStatus() == 0){
             throw new DisabledException("账号未激活");

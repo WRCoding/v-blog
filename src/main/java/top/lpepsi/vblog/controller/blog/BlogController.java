@@ -37,10 +37,16 @@ public class BlogController {
     @Autowired
     private BlogMapper blogMapper;
 
+    @RequestMapping("/mini")
+    @ResponseBody
+    public Response mini(){
+        return Response.success(blogService.findBlog(21));
+    }
+
     @GetMapping("/blogs")
     @ResponseBody
-    public Response blogs(@RequestParam("currentPage")Integer currentPage){
-        if (currentPage < 1 || currentPage >Integer.MAX_VALUE){
+    public Response blogs(@RequestParam(value = "currentPage",required = false)Integer currentPage){
+        if (currentPage < 1){
             return Response.failure("分页参数错误");
         }
         return blogService.blogs(currentPage);

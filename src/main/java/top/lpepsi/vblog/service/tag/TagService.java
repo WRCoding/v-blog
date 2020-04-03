@@ -50,4 +50,13 @@ public interface TagService {
     * @Date: 2020-02-23
     */
     Response getBlogByTag();
+
+    /**
+    * @Description: 获取指定标签下的博客
+    * @Param: []
+    * @return: top.lpepsi.vblog.dto.Response
+    * @Author: 林北
+    * @Date: 2020-03-22
+    */
+    Response getBlogWithTag(String key);
 }
