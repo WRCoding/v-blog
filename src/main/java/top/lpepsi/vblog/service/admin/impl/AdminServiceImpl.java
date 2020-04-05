@@ -4,12 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.lpepsi.vblog.constant.RedisKeyConstant;
 import top.lpepsi.vblog.dao.AdminMapper;
 import top.lpepsi.vblog.dao.BlogMapper;
+import top.lpepsi.vblog.dto.Comment;
 import top.lpepsi.vblog.dto.Detail;
 import top.lpepsi.vblog.dto.Edit;
 import top.lpepsi.vblog.dto.Response;
@@ -17,9 +19,12 @@ import top.lpepsi.vblog.service.admin.AdminService;
 import top.lpepsi.vblog.service.blog.BlogService;
 import top.lpepsi.vblog.service.blog.impl.BlogServiceImpl;
 import top.lpepsi.vblog.service.cache.RedisService;
+import top.lpepsi.vblog.utils.DateUtil;
 import top.lpepsi.vblog.utils.RedisUtil;
+import top.lpepsi.vblog.vdo.CommentDO;
 import top.lpepsi.vblog.vdo.ResultCode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -100,6 +105,30 @@ public class AdminServiceImpl implements AdminService {
             LOGGER.error("updateBlog异常： "+e.getMessage());
         }
         return Response.failure("更新失败");
+    }
+
+    @Override
+    public Response getPersonalComment(String author,Integer pageNum) {
+        if(author == null){
+            LOGGER.error("getPersonalComment： author不能为空");
+            return Response.customize(ResultCode.INVALID_ARGUMENT,"参数无效");
+        }
+        try {
+            PageHelper.startPage(pageNum, 7);
+            List<CommentDO> personalComment = adminMapper.getPersonalComment(author);
+            for (CommentDO commentDO : personalComment) {
+                if (commentDO.getChildComments() != null){
+                    for (CommentDO aDo : commentDO.getChildComments()) {
+                        aDo.setCreateTime(DateUtil.date2String(aDo.getCreateBy(), "yyyy-MM-dd HH:mm:ss"));
+                    }
+                }
+                commentDO.setCreateTime(DateUtil.date2String(commentDO.getCreateBy(), "yyyy-MM-dd HH:mm:ss"));
+            }
+            return Response.success(new PageInfo<>(personalComment));
+        }catch (Exception e){
+
+        }
+        return null;
     }
 
 }

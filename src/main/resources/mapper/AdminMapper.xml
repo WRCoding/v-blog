@@ -10,6 +10,18 @@
         <result property="createBy" column="create_by"/>
         <result property="likeNum" column="like_num"/>
     </resultMap>
+
+    <resultMap id="CommentMap" type="top.lpepsi.vblog.vdo.CommentDO">
+        <id column="id" property="id"/>
+        <result column="articleId" property="article_id"/>
+        <result column="commentName" property="comment_name"/>
+        <result column="replyName" property="reply_name"/>
+        <result column="comment" property="comment"/>
+        <result column="createBy" property="create_by"/>
+        <result column="parentId" property="parent_id"/>
+        <collection property="childComments" ofType="top.lpepsi.vblog.vdo.CommentDO" select="getChildComment" column="id"/>
+    </resultMap>
+
     <select id="blogManager" parameterType="string" resultMap="detail">
         SELECT
             id,
@@ -49,5 +61,35 @@
     <update id="updateBlogContent" parameterType="top.lpepsi.vblog.dto.Edit">
         UPDATE blog_article_content SET article_content = #{content} WHERE article_id = #{id}
     </update>
+
+    <select id="getPersonalComment" resultMap="CommentMap">
+    SELECT
+        id,
+        article_id,
+        comment_name,
+        reply_name,
+        COMMENT,
+        create_by,
+        parent_id
+    FROM
+        blog_article_comment
+    WHERE
+        article_id IN ( SELECT id FROM blog_article_info WHERE author = #{author} )
+    </select>
+
+    <select id="getChildComment" resultMap="CommentMap">
+    SELECT
+        id,
+        article_id,
+        comment_name,
+        reply_name,
+        COMMENT,
+        create_by,
+        parent_id
+    FROM
+        blog_article_comment
+    WHERE
+        blog_article_comment.parent_id = #{id}
+    </select>
 
 </mapper>

@@ -47,4 +47,10 @@ public class AdminController {
         return adminService.updateBlog(edit);
     }
 
+    @GetMapping("/personalComment")
+    @ResponseBody
+    public Response getPersonalComment(@RequestParam(value = "author")String author,@RequestParam("pageNum")Integer pageNum){
+        return adminService.getPersonalComment(author,pageNum);
+    }
+
 }

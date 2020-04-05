@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import top.lpepsi.vblog.dto.Detail;
 import top.lpepsi.vblog.dto.Edit;
+import top.lpepsi.vblog.vdo.CommentDO;
 
 import java.util.List;
 
@@ -78,4 +79,6 @@ public interface AdminMapper {
     * @Date: 2020-04-03
     */
     int updateBlogTitle(Edit edit);
+
+    List<CommentDO> getPersonalComment(String author);
 }

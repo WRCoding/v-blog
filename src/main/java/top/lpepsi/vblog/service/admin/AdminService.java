@@ -47,4 +47,13 @@ public interface AdminService {
     * @Date: 2020-04-03
     */
     Response updateBlog(Edit edit);
+    
+    /**
+    * @Description: 用户所有文章评论
+    * @Param: [author]
+    * @return: top.lpepsi.vblog.dto.Response
+    * @Author: 林北
+    * @Date: 2020-04-04
+    */
+    Response getPersonalComment(String author,Integer pageNum);
 }

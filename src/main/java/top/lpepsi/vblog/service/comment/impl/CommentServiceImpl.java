@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Response getCommentsByArticleId(Integer articleId) {
         if (articleId == null){
-            return Response.failure("获取评论列表失败");
+            return Response.failure("articleId不能为空");
         }
         try {
             List<CommentDO> list = commentMapper.getCommentsByArticleId(articleId);

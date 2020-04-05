@@ -22,6 +22,7 @@ public class CommentDO implements Serializable {
     private String replyName;
     private String comment;
     private Date createBy;
+    private String createTime;
     private Date modifiedBy;
     private Integer isDelete;
     private Integer parentId;

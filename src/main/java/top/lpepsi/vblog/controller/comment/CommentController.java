@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import top.lpepsi.vblog.dao.AdminMapper;
 import top.lpepsi.vblog.dao.CommentMapper;
 import top.lpepsi.vblog.dto.Comment;
 import top.lpepsi.vblog.dto.Response;
@@ -28,6 +29,9 @@ public class CommentController {
 
     @Autowired
     private CommentServiceImpl commentService;
+
+    @Autowired
+    private AdminMapper adminMapper;
 
     @GetMapping("/comment/{articleId}")
     @ResponseBody
