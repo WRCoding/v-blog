@@ -23,7 +23,7 @@ public class QuartzConfig {
 
     @Bean
     public Trigger likeCountJobTrigger(){
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 0/2 * * ?");
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 12 1/1 * ? *");
         return TriggerBuilder.newTrigger().forJob(likeJobDetail()).withIdentity(QUARTZ_TRIGGER).withSchedule(cronScheduleBuilder).build();
     }
 }

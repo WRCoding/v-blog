@@ -48,9 +48,14 @@ public class AdminController {
     }
 
     @GetMapping("/personalComment")
-    @ResponseBody
     public Response getPersonalComment(@RequestParam(value = "author")String author,@RequestParam("pageNum")Integer pageNum){
         return adminService.getPersonalComment(author,pageNum);
     }
+
+    @PutMapping("/changPwd")
+    public Response changPwd(@RequestParam("newPassWord")String newPassWord){
+        return adminService.changPwd(newPassWord);
+    }
+
 
 }

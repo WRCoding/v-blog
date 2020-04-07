@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.lpepsi.vblog.constant.RedisKeyConstant;
@@ -15,6 +18,7 @@ import top.lpepsi.vblog.dto.Comment;
 import top.lpepsi.vblog.dto.Detail;
 import top.lpepsi.vblog.dto.Edit;
 import top.lpepsi.vblog.dto.Response;
+import top.lpepsi.vblog.jwt.JwtUserDetails;
 import top.lpepsi.vblog.service.admin.AdminService;
 import top.lpepsi.vblog.service.blog.BlogService;
 import top.lpepsi.vblog.service.blog.impl.BlogServiceImpl;
@@ -62,10 +66,10 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Response personalData(String username) {
-        int commentNum = adminMapper.getCommentNum(username);
-        int commentChileNum = adminMapper.getCommentChileNum(username);
-        int blogNum = adminMapper.getBlogNum(username);
-        int viewNum = adminMapper.getViewNum(username);
+        Integer commentNum = adminMapper.getCommentNum(username);
+        Integer commentChileNum = adminMapper.getCommentChileNum(username);
+        Integer blogNum = adminMapper.getBlogNum(username);
+        Integer viewNum = adminMapper.getViewNum(username);
         HashMap<String, Integer> map = new HashMap<>((int) (2 / 0.75F + 1));
         map.put("commentNum", commentChileNum + commentNum);
         map.put("blogNum", blogNum);
@@ -129,6 +133,23 @@ public class AdminServiceImpl implements AdminService {
 
         }
         return null;
+    }
+
+    @Override
+    public Response changPwd(String newPassword) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        try {
+            Integer changPwd = adminMapper.changPwd(username, new BCryptPasswordEncoder().encode(newPassword));
+            if (changPwd == 1){
+                return Response.success("修改成功");
+            }else {
+                LOGGER.error("changPwd:username: "+username+"修改密码错误");
+                return Response.failure("修改失败");
+            }
+        }catch (Exception e){
+            LOGGER.error("changPwd:username: "+username+"修改密码错误,exception: "+e.getMessage());
+            return Response.failure("修改失败");
+        }
     }
 
 }

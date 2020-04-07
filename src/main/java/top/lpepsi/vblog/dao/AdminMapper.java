@@ -33,7 +33,7 @@ public interface AdminMapper {
     * @Author: 林北
     * @Date: 2020-03-30
     */
-    int getCommentNum(String username);
+    Integer getCommentNum(String username);
     
     /**
     * @Description: 获取用户子评论个数
@@ -42,7 +42,7 @@ public interface AdminMapper {
     * @Author: 林北
     * @Date: 2020-03-30
     */
-    int getCommentChileNum(String username);
+    Integer getCommentChileNum(String username);
     
     /**
     * @Description: 获取用户文章数
@@ -51,7 +51,7 @@ public interface AdminMapper {
     * @Author: 林北
     * @Date: 2020-03-30
     */
-    int getBlogNum(String username);
+    Integer getBlogNum(String username);
     
     /**
     * @Description: 获取用户访问量
@@ -60,7 +60,7 @@ public interface AdminMapper {
     * @Author: 林北
     * @Date: 2020-03-30
     */
-    int getViewNum(String username);
+    Integer getViewNum(String username);
     
     /**
     * @Description: 更新文章内容
@@ -69,7 +69,7 @@ public interface AdminMapper {
     * @Author: 林北
     * @Date: 2020-04-03
     */
-    int updateBlogContent(Edit edit);
+    Integer updateBlogContent(Edit edit);
     
     /**
     * @Description: 更新文章标题
@@ -78,7 +78,23 @@ public interface AdminMapper {
     * @Author: 林北
     * @Date: 2020-04-03
     */
-    int updateBlogTitle(Edit edit);
+    Integer updateBlogTitle(Edit edit);
 
+    /**
+    * @Description: 获得用户文章的所有评论
+    * @Param: [author]
+    * @return: java.util.List<top.lpepsi.vblog.vdo.CommentDO>
+    * @Author: 林北
+    * @Date: 2020-04-06
+    */
     List<CommentDO> getPersonalComment(String author);
+
+    /**
+    * @Description: 修改密码
+    * @Param: [username, newPassWord]
+    * @return: java.lang.Integer
+    * @Author: 林北
+    * @Date: 2020-04-06
+    */
+    Integer changPwd(String username,String newPassWord);
 }

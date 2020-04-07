@@ -56,4 +56,13 @@ public interface AdminService {
     * @Date: 2020-04-04
     */
     Response getPersonalComment(String author,Integer pageNum);
+    
+    /**
+    * @Description: 修改密码
+    * @Param: [newPassword]
+    * @return: top.lpepsi.vblog.dto.Response
+    * @Author: 林北
+    * @Date: 2020-04-06
+    */
+    Response changPwd(String newPassword);
 }

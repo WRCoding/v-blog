@@ -36,10 +36,10 @@
         ORDER BY
             create_by DESC
     </select>
-    <select id="getCommentNum" parameterType="string" resultType="int">
+    <select id="getCommentNum" parameterType="string" resultType="Integer">
         SELECT COUNT(`comment`) FROM blog_article_comment WHERE article_id IN (SELECT id FROM blog_article_info WHERE author = #{username})
     </select>
-    <select id="getCommentChileNum" parameterType="string" resultType="int">
+    <select id="getCommentChileNum" parameterType="string" resultType="Integer">
     SELECT
         COUNT( `comment` )
     FROM
@@ -47,11 +47,11 @@
     WHERE
         parent_id IN ( SELECT id FROM blog_article_comment WHERE article_id IN ( SELECT id FROM blog_article_info WHERE author = #{username} ) )
     </select>
-    <select id="getBlogNum" parameterType="string" resultType="int">
+    <select id="getBlogNum" parameterType="string" resultType="Integer">
         SELECT COUNT(id) FROM blog_article_info WHERE author = #{username}
     </select>
-    <select id="getViewNum" parameterType="string" resultType="int">
-        SELECT `view` FROM blog_user_view WHERE user_name = #{username}
+    <select id="getViewNum" parameterType="string" resultType="Integer">
+        SELECT IFNULL(MAX(`view`),0) AS `view` FROM blog_user_view WHERE user_name = #{username}
     </select>
 
     <update id="updateBlogTitle" parameterType="top.lpepsi.vblog.dto.Edit">
@@ -91,5 +91,9 @@
     WHERE
         blog_article_comment.parent_id = #{id}
     </select>
+
+    <update id="changPwd" >
+    UPDATE blog_user SET `password` = #{newPassWord} WHERE username = #{username}
+    </update>
 
 </mapper>
