@@ -25,7 +25,7 @@ public class JwtTokenUtil {
     /**
      * JWT密钥
      */
-    private static final String TOKEN_SECRET = "cookies";
+    public static String secret ;
 
     /**
      * JWT签发人
@@ -54,12 +54,13 @@ public class JwtTokenUtil {
     * @Author: 林北
     * @Date: 2020-02-16
     */
-    public static String createToken(String username,String role, boolean isRememberMe) {
+    public static String createToken(String username,String password,String role, boolean isRememberMe) {
         long expiration = isRememberMe ? EXPIRATION_REMEMBER : EXPIRATION;
         HashMap<String,Object> map = new HashMap<>((int)(1/0.75F+1));
+        secret = password;
         map.put(ROLE_CLAIMS,role);
         return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, TOKEN_SECRET)
+                .signWith(SignatureAlgorithm.HS512, password)
                 .setClaims(map)
                 .setIssuer(TOKEN_ISS)
                 .setSubject(username)
@@ -99,7 +100,7 @@ public class JwtTokenUtil {
     */
     private static Claims getTokenBody(String token){
         return Jwts.parser()
-                .setSigningKey(TOKEN_SECRET)
+                .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
     }

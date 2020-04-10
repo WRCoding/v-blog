@@ -24,6 +24,7 @@ import top.lpepsi.vblog.service.blog.BlogService;
 import top.lpepsi.vblog.service.blog.impl.BlogServiceImpl;
 import top.lpepsi.vblog.service.cache.RedisService;
 import top.lpepsi.vblog.utils.DateUtil;
+import top.lpepsi.vblog.utils.JwtTokenUtil;
 import top.lpepsi.vblog.utils.RedisUtil;
 import top.lpepsi.vblog.vdo.CommentDO;
 import top.lpepsi.vblog.vdo.ResultCode;
@@ -141,6 +142,7 @@ public class AdminServiceImpl implements AdminService {
         try {
             Integer changPwd = adminMapper.changPwd(username, new BCryptPasswordEncoder().encode(newPassword));
             if (changPwd == 1){
+                JwtTokenUtil.secret = new BCryptPasswordEncoder().encode(newPassword);
                 return Response.success("修改成功");
             }else {
                 LOGGER.error("changPwd:username: "+username+"修改密码错误");

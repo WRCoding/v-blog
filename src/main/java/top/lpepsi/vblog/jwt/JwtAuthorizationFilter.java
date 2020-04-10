@@ -46,6 +46,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         } catch (ExpiredJwtException e) {
             LOGGER.error("我登录了，但token过期了");
             chain.doFilter(request,response);
+        } catch (Exception e){
+            chain.doFilter(request,response);
         }
     }
     /**

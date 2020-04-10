@@ -40,17 +40,13 @@ public class AliyunOssUtil {
         boolean isImage = true;
         try {
             Image image = ImageIO.read(file);
-            isImage = image == null?false:true;
+            isImage = image != null;
         }catch (Exception e){
             e.printStackTrace();
         }
         LOGGER.info("----文件上传开始----"+file.getName());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String dateStr = format.format(new Date());
-
-        if(file == null){
-            return null;
-        }
 
         OSS ossClient = new OSSClientBuilder().build(endPoint, accessKeyId, accessKeySecret);;
         try {

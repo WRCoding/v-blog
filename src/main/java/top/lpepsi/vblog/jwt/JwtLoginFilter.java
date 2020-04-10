@@ -79,7 +79,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter  {
         for (GrantedAuthority authority : authorities) {
             role.append(authority.getAuthority());
         }
-        String token = JwtTokenUtil.createToken(userDetails.getUsername(), role.toString(),false);
+        String token = JwtTokenUtil.createToken(userDetails.getUsername(), userDetails.getPassword(),role.toString(),false);
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json; charset=utf-8");
         HashMap<String,String> info = new HashMap<>((int) (2/0.75F+1F));
