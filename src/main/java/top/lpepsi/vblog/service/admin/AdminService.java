@@ -40,6 +40,15 @@ public interface AdminService {
     Response editByArticleId(Integer articleId);
     
     /**
+    * @Description: 删除博客
+    * @Param: [articleId]
+    * @return: top.lpepsi.vblog.dto.Response
+    * @Author: 林北
+    * @Date: 2020-05-08
+    */
+    Response deleteBlog(Integer articleId);
+    
+    /**
     * @Description: 更新文章
     * @Param: [edit]
     * @return: top.lpepsi.vblog.dto.Response
@@ -58,6 +67,15 @@ public interface AdminService {
     Response getPersonalComment(String author,Integer pageNum);
     
     /**
+    * @Description: 删除评论
+    * @Param: [commentId]
+    * @return: top.lpepsi.vblog.dto.Response
+    * @Author: 林北
+    * @Date: 2020-05-12
+    */
+    Response deleteComment(Integer commentId);
+    
+    /**
     * @Description: 修改密码
     * @Param: [newPassword]
     * @return: top.lpepsi.vblog.dto.Response
@@ -65,4 +83,31 @@ public interface AdminService {
     * @Date: 2020-04-06
     */
     Response changPwd(String newPassword);
+    
+    /**
+    * @Description: 每日更新所有用户的博客数
+    * @Param: []
+    * @return: void
+    * @Author: 林北
+    * @Date: 2020-05-01
+    */
+    void updateRecord();
+
+    /**
+    * @Description: 每日更新所有用户的浏览量
+    * @Param: []
+    * @return: void
+    * @Author: 林北
+    * @Date: 2020-05-01
+    */
+    void updateRecordView();
+
+    /**
+    * @Description: 根据key获取对应用户的记录
+    * @Param: [username, key]
+    * @return: top.lpepsi.vblog.dto.Response
+    * @Author: 林北
+    * @Date: 2020-05-02
+    */
+    Response getRecord(String username,String key);
 }

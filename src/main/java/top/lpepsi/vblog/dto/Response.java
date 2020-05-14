@@ -56,6 +56,13 @@ public class Response<T> {
         return new Response<T>(ResultCode.ERROR.getCode(), ResultCode.ERROR.getMessage(),data);
     }
 
+    /**
+    * @Description: 自定义
+    * @Param: [resultCode, data]
+    * @return: top.lpepsi.vblog.dto.Response<T>
+    * @Author: 林北
+    * @Date: 2020-04-24
+    */
     public static <T> Response<T> customize(ResultCode resultCode,T data){
         return new Response<T>(resultCode.getCode(), resultCode.getMessage(),data);
     }

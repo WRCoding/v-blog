@@ -50,4 +50,9 @@ public class EsBlogServiceImpl implements EsBlogService {
 //        Pageable pageable = PageRequest.of(pageNum, pageSize);
         return repository.findByAuthorOrArticleTitleOrArticleContent(keyWord,keyWord,keyWord);
     }
+
+    @Override
+    public void delete(Integer articleId) {
+        repository.deleteById(articleId);
+    }
 }

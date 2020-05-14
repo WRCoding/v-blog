@@ -30,9 +30,6 @@ public class ViewAop {
     private static final Logger LOGGER = LoggerFactory.getLogger(ViewAop.class);
 
     @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
     private RedisUtil redisUtil;
 
     @Pointcut("execution(* top.lpepsi.vblog.controller.blog.BlogController.article(..))")

@@ -32,23 +32,39 @@
         FROM
             blog_article_info
         WHERE
+            blog_article_info.is_delete = 0 and
             author = #{username}
         ORDER BY
             create_by DESC
     </select>
     <select id="getCommentNum" parameterType="string" resultType="Integer">
-        SELECT COUNT(`comment`) FROM blog_article_comment WHERE article_id IN (SELECT id FROM blog_article_info WHERE author = #{username})
+    SELECT
+	    COUNT( `comment` )
+    FROM
+	    blog_article_comment
+    WHERE
+	    blog_article_comment.is_delete = 0
+	AND article_id IN ( SELECT id FROM blog_article_info WHERE blog_article_info.is_delete = 0 and author = #{username} )
     </select>
     <select id="getCommentChileNum" parameterType="string" resultType="Integer">
     SELECT
-        COUNT( `comment` )
+	    COUNT( `comment` )
     FROM
-        blog_article_comment
+	    blog_article_comment
     WHERE
-        parent_id IN ( SELECT id FROM blog_article_comment WHERE article_id IN ( SELECT id FROM blog_article_info WHERE author = #{username} ) )
+	    blog_article_comment.is_delete = 0
+	AND parent_id IN (
+	SELECT
+		id
+	FROM
+		blog_article_comment
+	WHERE
+		blog_article_comment.is_delete = 0
+	AND article_id IN ( SELECT id FROM blog_article_info WHERE blog_article_info.is_delete = 0 AND author = #{username} )
+	)
     </select>
     <select id="getBlogNum" parameterType="string" resultType="Integer">
-        SELECT COUNT(id) FROM blog_article_info WHERE author = #{username}
+        SELECT COUNT(id) FROM blog_article_info WHERE author = #{username} and blog_article_info.is_delete = 0
     </select>
     <select id="getViewNum" parameterType="string" resultType="Integer">
         SELECT IFNULL(MAX(`view`),0) AS `view` FROM blog_user_view WHERE user_name = #{username}
@@ -74,7 +90,8 @@
     FROM
         blog_article_comment
     WHERE
-        article_id IN ( SELECT id FROM blog_article_info WHERE author = #{author} )
+        blog_article_comment.is_delete = 0 and
+        article_id IN ( SELECT id FROM blog_article_info WHERE  blog_article_info.is_delete = 0 and author = #{author} )
     </select>
 
     <select id="getChildComment" resultMap="CommentMap">
@@ -89,6 +106,7 @@
     FROM
         blog_article_comment
     WHERE
+        blog_article_comment.is_delete = 0 and
         blog_article_comment.parent_id = #{id}
     </select>
 
@@ -96,4 +114,55 @@
     UPDATE blog_user SET `password` = #{newPassWord} WHERE username = #{username}
     </update>
 
+    <select id="getUserName" resultType="string">
+    SELECT username FROM blog_user
+    </select>
+
+    <insert id="updateRecordNum">
+    INSERT INTO blog_record_num ( num, username )
+    VALUES
+    <foreach collection="list" item="record" separator=",">
+        (#{record.data},#{record.userName})
+    </foreach>
+    </insert>
+    <insert id="updateRecordView">
+    INSERT INTO blog_record_view ( view, username )
+    VALUES
+    <foreach collection="list" item="record" separator=",">
+        (#{record.data},#{record.userName})
+    </foreach>
+    </insert>
+    <select id="getRecord" resultType="RecordDO">
+SELECT
+	DATE_FORMAT(t2.days,'%Y-%m-%d') create_by,
+	IFNULL(data,0) data
+FROM
+	(
+	SELECT
+		@cdate := DATE_ADD( @cdate, INTERVAL -1 DAY ) days
+	FROM
+		( SELECT @cdate := CURDATE( ) FROM blog_article_info LIMIT 6 ) t1)t2 LEFT JOIN
+	(SELECT
+		DATE_FORMAT(create_by,'%Y-%m-%d') create_by,
+		data
+	FROM
+		${tableName}
+	WHERE
+		username = #{username}
+		AND DATE_FORMAT(create_by,'%Y-%m-%d') >= DATE_SUB( CURDATE( ), INTERVAL 6 DAY )
+	) t3 ON t2.days = t3.create_by
+ORDER BY
+	DATE_FORMAT(t2.days,'%Y-%m-%d')
+    </select>
+    <update id="deleteBlog" parameterType="integer">
+        UPDATE blog_article_info SET is_delete = 1 WHERE id = #{articleId}
+    </update>
+    <update id="changTagNum">
+        <foreach collection="list" item="tag" separator=";">
+            UPDATE blog_tag SET tag_number = tag_number-1 WHERE tag_name = #{tag}
+        </foreach>
+    </update>
+    <update id="deleteComment" parameterType="integer">
+        UPDATE blog_article_comment SET is_delete = 1 WHERE id = #{commentId}
+    </update>
 </mapper>

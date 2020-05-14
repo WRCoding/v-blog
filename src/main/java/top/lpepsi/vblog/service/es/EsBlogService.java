@@ -41,4 +41,13 @@ public interface EsBlogService {
     * @Date: 2020-03-01
     */
     List<Detail> searech(String keyWord);
+    
+    /**
+    * @Description: 从ES删除博客
+    * @Param: [articleId]
+    * @return: void
+    * @Author: 林北
+    * @Date: 2020-05-14
+    */
+    void delete(Integer articleId);
 }

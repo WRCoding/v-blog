@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.lpepsi.vblog.job.QuartzJob;
 
+
 /**
  * @program: v-blog
  * @description: 定时任务配置类

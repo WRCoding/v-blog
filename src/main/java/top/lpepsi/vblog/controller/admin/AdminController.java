@@ -57,5 +57,16 @@ public class AdminController {
         return adminService.changPwd(newPassWord);
     }
 
-
+    @GetMapping("/getRecord")
+    public Response getRecord(@RequestParam("username")String username,@RequestParam("key")String key){
+        return adminService.getRecord(username,key);
+    }
+    @GetMapping("/delete/blog/{id}")
+    public Response deleteBlog(@PathVariable("id")Integer id){
+        return adminService.deleteBlog(id);
+    }
+    @GetMapping("/delete/comment/{id}")
+    public Response deleteComment(@PathVariable("id")Integer id){
+        return adminService.deleteComment(id);
+    }
 }

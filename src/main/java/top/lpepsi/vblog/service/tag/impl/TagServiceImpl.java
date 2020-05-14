@@ -18,6 +18,9 @@ import top.lpepsi.vblog.vdo.TagDO;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @program: v-blog
@@ -75,12 +78,11 @@ public class TagServiceImpl implements TagService {
                     redisUtil.listLeftPushAll(RedisKeyConstant.TAGS, tagMapper.getTags());
             }
             List<TagDO> list = redisUtil.listGetAll(RedisKeyConstant.TAGS);
-            if (null != list){
-                list.forEach(tagDO -> {
+            list.forEach(tagDO -> {
                     List<Detail> blogByTagName = blogMapper.findBlogByTagName(tagDO.getTagName());
                     redisUtil.hashPut(RedisKeyConstant.TAG_BLOG, tagDO.getTagName(), blogByTagName);
                 });
-            }
+
             return Response.success(list);
         } catch (Exception e) {
             LOGGER.error("getTags发生异常："+e.getMessage());

@@ -36,6 +36,8 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private ThreadPoolExecutor threadPool = new ThreadPoolExecutor(5, 5, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+
     @Autowired
     private UserMapper userMapper;
 
@@ -79,7 +81,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int sendEmail(String email, String username) {
-        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(5, 5, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         if (email == null) {
             email = getEmailByUserName(username);
         }

@@ -10,6 +10,6 @@
         insert into blog_info_sort(sort_id,article_id) values (#{tagId},#{articleId})
     </insert>
     <select id="getTags" resultType="tagDO">
-        SELECT * FROM blog_tag
+        SELECT * FROM blog_tag WHERE tag_number > 0
     </select>
 </mapper>

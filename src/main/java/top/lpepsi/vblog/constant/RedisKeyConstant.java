@@ -18,6 +18,8 @@ public class RedisKeyConstant {
     public static final String TAGS = "TAGS";
     public static final String TAG_BLOG = "TAG_BLOG";
     public static final String USER_VIEW = "USER_VIEW";
+    public static final String ARCHIVE = "ARCHIVE";
+    public static final String ARCHIVE_BLOG = "ARCHIVE_BLOG";
 
     public static String getLikeKey(String username,Integer articleId){
         StringBuilder builder = new StringBuilder();

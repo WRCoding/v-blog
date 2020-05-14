@@ -47,28 +47,31 @@
             )
         WHERE
             blog_article_info.is_delete = 0
-            AND blog_sort.is_effective = 1
         ORDER BY
             blog_article_info.create_by DESC
     </select>
 
     <select id="detailBlogs" resultMap="detail">
-        SELECT
-            blog_article_info.id,
-            blog_article_info.author,
-            article_title,
-            article_content,
-            image_url,
-            article_views,
-            blog_article_info.create_by,
-            blog_article_info.like_num,
-            blog_tag.tag_name
-        FROM
-            (
-                ( ( blog_article_info LEFT JOIN blog_article_content ON blog_article_info.id = blog_article_content.article_id ) LEFT JOIN blog_article_image ON blog_article_info.id = blog_article_image.article_id )
-                LEFT JOIN blog_info_sort ON blog_info_sort.article_id = blog_article_info.id
-            )
-            LEFT JOIN blog_tag ON blog_tag.id = blog_info_sort.sort_id ORDER BY blog_article_info.create_by DESC
+    SELECT
+        blog_article_info.id,
+        blog_article_info.author,
+        article_title,
+        article_content,
+        image_url,
+        article_views,
+        blog_article_info.create_by,
+        blog_article_info.like_num,
+        blog_tag.tag_name
+    FROM
+        (
+            ( ( blog_article_info LEFT JOIN blog_article_content ON blog_article_info.id = blog_article_content.article_id ) LEFT JOIN blog_article_image ON blog_article_info.id = blog_article_image.article_id )
+            LEFT JOIN blog_info_sort ON blog_info_sort.article_id = blog_article_info.id
+        )
+        LEFT JOIN blog_tag ON blog_tag.id = blog_info_sort.sort_id
+    WHERE
+        blog_article_info.is_delete = 0
+    ORDER BY
+        blog_article_info.create_by DESC
     </select>
 
     <select id="findBlog" resultMap="detail">
@@ -89,6 +92,7 @@
             )
             LEFT JOIN blog_tag ON blog_tag.id = blog_info_sort.sort_id
         WHERE
+            blog_article_info.is_delete = 0 and
             blog_article_info.id = #{blogId}
     </select>
 
@@ -110,6 +114,7 @@
         )
         LEFT JOIN blog_tag ON blog_tag.id = blog_info_sort.sort_id
     WHERE
+    	blog_article_info.is_delete = 0 and
         blog_tag.tag_name = #{tagName}
     ORDER BY
         blog_article_info.create_by DESC

@@ -13,6 +13,7 @@ import top.lpepsi.vblog.dto.Blog;
 import top.lpepsi.vblog.dto.Detail;
 import top.lpepsi.vblog.dto.Edit;
 import top.lpepsi.vblog.dto.Response;
+import top.lpepsi.vblog.service.admin.AdminService;
 import top.lpepsi.vblog.service.blog.impl.BlogServiceImpl;
 import top.lpepsi.vblog.vdo.ArticleDO;
 
@@ -37,11 +38,9 @@ public class BlogController {
     @Autowired
     private BlogMapper blogMapper;
 
-    @RequestMapping("/mini")
-    @ResponseBody
-    public Response mini(){
-        return Response.success(blogService.findBlog(21));
-    }
+    @Autowired
+    private AdminService adminService;
+
 
     @GetMapping("/blogs")
     @ResponseBody
@@ -75,6 +74,4 @@ public class BlogController {
     public Response<List<Detail>> saveBlogs2Redis(){
         return blogService.getMostViewBlog();
     }
-
-
 }

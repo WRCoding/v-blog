@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lpepsi.vblog.dao.ArchiveMapper">
+    <resultMap id="detail" type="top.lpepsi.vblog.dto.Detail">
+        <id property="id" column="id"/>
+        <result property="author" column="author"/>
+        <result property="articleTitle" column="article_title"/>
+        <result property="articleViews" column="article_views"/>
+        <result property="createBy" column="create_by"/>
+        <result property="likeNum" column="like_num"/>
+        <result property="titleImage" column="image_url"/>
+        <result property="articleContent" column="article_content"/>
+    </resultMap>
+    <select id="getYear" resultType="integer">
+    SELECT DISTINCT YEAR
+	    ( blog_article_info.create_by ) AS `year`
+    FROM
+        blog_article_info
+    where
+        blog_article_info.is_delete = 0
+    ORDER BY
+        blog_article_info.create_by DESC
+    </select>
+    <select id="getBlogsByYear" parameterType="integer" resultMap="detail">
+    SELECT
+	    blog_article_info.id,
+	    blog_article_info.article_title
+    FROM
+        blog_article_info
+    WHERE
+        blog_article_info.is_delete = 0
+        AND DATE_FORMAT( blog_article_info.create_by, '%Y' ) = #{year}
+    </select>
+</mapper>

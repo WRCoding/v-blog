@@ -19,6 +19,7 @@
         FROM
             blog_article_comment
         WHERE
+        	blog_article_comment.is_delete = 0 and
             blog_article_comment.parent_id = #{id}
     </select>
     <select id="getCommentsByArticleId" resultMap="CommentMap">
@@ -27,6 +28,7 @@
         FROM
             blog_article_comment
         WHERE
+            blog_article_comment.is_delete = 0 and
             article_id =  #{articleId}
     </select>
     <insert id="saveComment" parameterType="top.lpepsi.vblog.dto.Comment">

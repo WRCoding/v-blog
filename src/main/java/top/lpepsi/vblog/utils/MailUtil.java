@@ -31,7 +31,7 @@ public class MailUtil {
     private JavaMailSenderImpl mailSender;
 
     public void sendMail(String to, String message) throws MessagingException {
-            String address = " http://lpepsi.top/statusCode?code="+message;
+            String address = " http://localhost:8777/statusCode?code="+message;
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true);
             mimeMessageHelper.setSubject("激活账号");

@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import top.lpepsi.vblog.dto.Detail;
 import top.lpepsi.vblog.dto.Edit;
 import top.lpepsi.vblog.vdo.CommentDO;
+import top.lpepsi.vblog.vdo.RecordDO;
 
 import java.util.List;
 
@@ -25,6 +26,33 @@ public interface AdminMapper {
     * @Date: 2020-03-29
     */
     List<Detail> blogManager (@Param("username") String username);
+
+    /**
+    * @Description: 删除博客
+    * @Param: [articleId]
+    * @return: java.lang.Integer
+    * @Author: 林北
+    * @Date: 2020-05-08
+    */
+    Integer deleteBlog(Integer articleId);
+
+    /**
+    * @Description: 删除评论
+    * @Param: [commentId]
+    * @return: java.lang.Integer
+    * @Author: 林北
+    * @Date: 2020-05-12
+    */
+    Integer deleteComment(Integer commentId);
+
+    /**
+    * @Description: 对所删除博客所属的标签数量减一
+    * @Param: [tagNameList]
+    * @return: void
+    * @Author: 林北
+    * @Date: 2020-05-10
+    */
+    void changTagNum(List tagNameList);
 
     /**
     * @Description: 获取用户父评论个数
@@ -97,4 +125,40 @@ public interface AdminMapper {
     * @Date: 2020-04-06
     */
     Integer changPwd(String username,String newPassWord);
+
+    /**
+    * @Description: 获取所有用户名
+    * @Param: []
+    * @return: java.util.List<java.lang.String>
+    * @Author: 林北
+    * @Date: 2020-05-01
+    */
+    List<String> getUserName();
+
+    /**
+    * @Description: 更新所有用户每日的博客数
+    * @Param: [recordList]
+    * @return: void
+    * @Author: 林北
+    * @Date: 2020-05-01
+    */
+    void updateRecordNum(List recordDOList);
+    
+    /**
+    * @Description: 每日更新所有用户的浏览量
+    * @Param: [recordDOList]
+    * @return: void
+    * @Author: 林北
+    * @Date: 2020-05-01
+    */
+    void updateRecordView(List recordDOList);
+
+    /**
+    * @Description: 根据key获取对应用户的记录
+    * @Param: [username, tableName]
+    * @return: java.util.List<top.lpepsi.vblog.vdo.RecordDO>
+    * @Author: 林北
+    * @Date: 2020-05-02
+    */
+    List<RecordDO> getRecord(@Param("username")String username,@Param("tableName")String tableName);
 }

@@ -23,11 +23,15 @@ import top.lpepsi.vblog.service.admin.AdminService;
 import top.lpepsi.vblog.service.blog.BlogService;
 import top.lpepsi.vblog.service.blog.impl.BlogServiceImpl;
 import top.lpepsi.vblog.service.cache.RedisService;
+import top.lpepsi.vblog.service.es.EsBlogService;
+import top.lpepsi.vblog.service.es.impl.EsBlogServiceImpl;
 import top.lpepsi.vblog.utils.DateUtil;
 import top.lpepsi.vblog.utils.JwtTokenUtil;
 import top.lpepsi.vblog.utils.RedisUtil;
 import top.lpepsi.vblog.vdo.CommentDO;
+import top.lpepsi.vblog.vdo.RecordDO;
 import top.lpepsi.vblog.vdo.ResultCode;
+import top.lpepsi.vblog.vdo.TagDO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +51,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private AdminMapper adminMapper;
+
+    @Autowired
+    private EsBlogService esBlogService;
 
     @Autowired
     private RedisService redisService;
@@ -91,6 +98,30 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public Response deleteBlog(Integer articleId) {
+        Integer result = adminMapper.deleteBlog(articleId);
+        Detail blog = (Detail) redisUtil.hashGet(RedisKeyConstant.BLOG, String.valueOf(articleId));
+        List<TagDO> tags = blog.getTags();
+        List<String> tagNameList = new ArrayList<>();
+        tags.forEach(tagDO -> {
+            tagNameList.add(tagDO.getTagName());
+        });
+        if (result == 1){
+            adminMapper.changTagNum(tagNameList);
+            esBlogService.delete(articleId);
+            redisUtil.hashDelete(RedisKeyConstant.BLOG, String.valueOf(articleId));
+            redisUtil.listRemove(RedisKeyConstant.BLOG_LIST, String.valueOf(articleId));
+            redisUtil.zSetDelete(RedisKeyConstant.VIEW,String.valueOf(articleId));
+            redisUtil.delete(RedisKeyConstant.ARCHIVE);
+            redisUtil.delete(RedisKeyConstant.ARCHIVE_BLOG);
+            redisUtil.delete(RedisKeyConstant.TAGS);
+            redisUtil.delete(RedisKeyConstant.TAG_BLOG);
+            return Response.success("删除成功");
+        }
+        return Response.failure("删除失败");
+    }
+
+    @Override
     public Response updateBlog(Edit edit) {
         if (edit == null) {
             LOGGER.error("edit为空");
@@ -129,11 +160,22 @@ public class AdminServiceImpl implements AdminService {
                 }
                 commentDO.setCreateTime(DateUtil.date2String(commentDO.getCreateBy(), "yyyy-MM-dd HH:mm:ss"));
             }
-            return Response.success(new PageInfo<>(personalComment));
+            PageInfo<CommentDO> pageInfo = new PageInfo<>(personalComment);
+            return Response.success(pageInfo);
         }catch (Exception e){
 
         }
         return null;
+    }
+
+    @Override
+    public Response deleteComment(Integer commentId) {
+        Integer result = adminMapper.deleteComment(commentId);
+        if (result == 1){
+            return  Response.success("删除成功");
+        }else {
+            return Response.failure("评论删除失败");
+        }
     }
 
     @Override
@@ -152,6 +194,40 @@ public class AdminServiceImpl implements AdminService {
             LOGGER.error("changPwd:username: "+username+"修改密码错误,exception: "+e.getMessage());
             return Response.failure("修改失败");
         }
+    }
+
+    @Override
+    public void updateRecord() {
+        List<String> userNameList = adminMapper.getUserName();
+        List<RecordDO> recordDOList = new ArrayList<>();
+        LOGGER.info("userNameList: "+userNameList);
+        userNameList.forEach( userName -> {
+            RecordDO recordDO = new RecordDO(userName, adminMapper.getBlogNum(userName));
+            recordDOList.add(recordDO);
+        });
+        LOGGER.info("recordDOList: "+recordDOList);
+        adminMapper.updateRecordNum(recordDOList);
+    }
+
+    @Override
+    public void updateRecordView() {
+        List<String> userNameList = adminMapper.getUserName();
+        List<RecordDO> recordDOList = new ArrayList<>();
+        LOGGER.info("userNameList: "+userNameList);
+        userNameList.forEach( userName -> {
+            RecordDO recordDO = new RecordDO(userName, adminMapper.getViewNum(userName));
+            recordDOList.add(recordDO);
+        });
+        LOGGER.info("recordDOList: "+recordDOList);
+        adminMapper.updateRecordView(recordDOList);
+    }
+
+    @Override
+    public Response getRecord(String username, String key) {
+        String tableName = "blog_record_"+key;
+        List<RecordDO> recordList = adminMapper.getRecord(username, tableName);
+        LOGGER.info("recordList: "+recordList);
+        return Response.success(recordList);
     }
 
 }

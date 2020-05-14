@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import top.lpepsi.vblog.constant.RedisKeyConstant;
 
 import javax.annotation.PostConstruct;
+import javax.swing.text.TabableView;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -101,6 +102,9 @@ public class RedisUtil<HK,T> {
     public List<T> listGetRange(String key,Long start,Long end){
         return listOperations.range(key, start, end);
     }
+    public Long listRemove(String key, T value){
+        return listOperations.remove(key,0,value);
+    }
 
     /**
     * @Description: 以下是Value
@@ -124,6 +128,9 @@ public class RedisUtil<HK,T> {
     */
     public void zSetPut(String key,T value,Double score){
         zSetOperations.add(key,value,score);
+    }
+    public void zSetDelete(String key,T value){
+        zSetOperations.remove(key,value);
     }
     public Double zSetGetScore(String key,T value){
         return zSetOperations.score(key,value);
