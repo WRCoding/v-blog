@@ -79,19 +79,21 @@
     </update>
 
     <select id="getPersonalComment" resultMap="CommentMap">
-    SELECT
-        id,
-        article_id,
-        comment_name,
-        reply_name,
-        COMMENT,
-        create_by,
-        parent_id
-    FROM
-        blog_article_comment
-    WHERE
-        blog_article_comment.is_delete = 0 and
-        article_id IN ( SELECT id FROM blog_article_info WHERE  blog_article_info.is_delete = 0 and author = #{author} )
+        SELECT
+            article_title,
+            t1.id,
+            article_id,
+            comment_name,
+            reply_name,
+            COMMENT,
+            t1.create_by,
+            parent_id
+        FROM
+            blog_article_comment AS t1 LEFT JOIN
+            blog_article_info AS t2 ON t1.article_id = t2.id
+        WHERE
+            t1.is_delete = 0
+            AND article_id IN ( SELECT id FROM blog_article_info WHERE t2.is_delete = 0 AND author = #{author} )
     </select>
 
     <select id="getChildComment" resultMap="CommentMap">

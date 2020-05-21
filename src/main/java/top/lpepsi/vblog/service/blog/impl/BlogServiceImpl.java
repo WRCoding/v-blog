@@ -93,7 +93,7 @@ public class BlogServiceImpl implements BlogService {
         }
         Detail detail = redisService.getBlogFromRedis(String.valueOf(articleId));
         detail.setLikeNum(likeService.getLikedCountByIdFromRedis(articleId));
-        detail.setArticleContent(MarkDownToHtmlUtil.mdToHtml(detail.getArticleContent()));
+//        detail.setArticleContent(MarkDownToHtmlUtil.mdToHtml(detail.getArticleContent()));
         return Response.success(detail);
     }
 
