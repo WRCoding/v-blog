@@ -55,14 +55,15 @@ public class TagServiceImpl implements TagService {
     public int saveTag2DB(TagDO tagDO, Edit edit) {
         try {
             int i = tagMapper.saveTag2DB(tagDO);
+            LOGGER.info("i = "+i);
             if (i == 1){
                 tagDO.setTagNumber(1);
                 redisUtil.listPushRight(RedisKeyConstant.TAGS, tagDO);
             }
             if (i == 2){
-                List<Detail> list = (List<Detail>) redisUtil.hashGet(RedisKeyConstant.TAG_BLOG, tagDO.getTagName());
+                List<Detail> list = (List<Detail>) redisUtil.hashGet(RedisKeyConstant.TAG_BLOG, tagDO.getTagName().toLowerCase());
                 list.add(edit);
-                redisUtil.hashPut(RedisKeyConstant.TAG_BLOG, tagDO.getTagName(), list);
+                redisUtil.hashPut(RedisKeyConstant.TAG_BLOG, tagDO.getTagName().toLowerCase(), list);
             }
             return tagDO.getId();
         } catch (Exception e) {
@@ -80,7 +81,7 @@ public class TagServiceImpl implements TagService {
             List<TagDO> list = redisUtil.listGetAll(RedisKeyConstant.TAGS);
             list.forEach(tagDO -> {
                     List<Detail> blogByTagName = blogMapper.findBlogByTagName(tagDO.getTagName());
-                    redisUtil.hashPut(RedisKeyConstant.TAG_BLOG, tagDO.getTagName(), blogByTagName);
+                    redisUtil.hashPut(RedisKeyConstant.TAG_BLOG, tagDO.getTagName().toLowerCase(), blogByTagName);
                 });
 
             return Response.success(list);
@@ -102,7 +103,7 @@ public class TagServiceImpl implements TagService {
         if (null == key){
             return Response.failure("标签不存在");
         }
-        List<Detail> blogList = (List<Detail>) redisUtil.hashGet(RedisKeyConstant.TAG_BLOG, key);
+        List<Detail> blogList = (List<Detail>) redisUtil.hashGet(RedisKeyConstant.TAG_BLOG, key.toLowerCase());
         return Response.success(blogList);
     }
 }

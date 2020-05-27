@@ -52,7 +52,7 @@ public interface AdminMapper {
     * @Author: 林北
     * @Date: 2020-05-10
     */
-    void changTagNum(List tagNameList);
+    void changTagNum(@Param("list") List tagNameList);
 
     /**
     * @Description: 获取用户父评论个数

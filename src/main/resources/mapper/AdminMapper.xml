@@ -121,14 +121,14 @@
     </select>
 
     <insert id="updateRecordNum">
-    INSERT INTO blog_record_num ( num, username )
+    INSERT INTO blog_record_num ( data, username )
     VALUES
     <foreach collection="list" item="record" separator=",">
         (#{record.data},#{record.userName})
     </foreach>
     </insert>
     <insert id="updateRecordView">
-    INSERT INTO blog_record_view ( view, username )
+    INSERT INTO blog_record_view ( data, username )
     VALUES
     <foreach collection="list" item="record" separator=",">
         (#{record.data},#{record.userName})
@@ -159,7 +159,7 @@ ORDER BY
     <update id="deleteBlog" parameterType="integer">
         UPDATE blog_article_info SET is_delete = 1 WHERE id = #{articleId}
     </update>
-    <update id="changTagNum">
+    <update id="changTagNum" parameterType="java.util.List">
         <foreach collection="list" item="tag" separator=";">
             UPDATE blog_tag SET tag_number = tag_number-1 WHERE tag_name = #{tag}
         </foreach>

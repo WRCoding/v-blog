@@ -111,6 +111,7 @@ public class BlogServiceImpl implements BlogService {
             blogMapper.saveImage2DB(edit);
             for (String tag : edit.getTagArray()) {
                 TagDO tagDO = new TagDO(tag);
+                LOGGER.info("tagDO: "+tagDO.toString());
                 int tagId = tagService.saveTag2DB(tagDO,edit);
                 tagService.tagToArticle(tagId, articleId);
             }

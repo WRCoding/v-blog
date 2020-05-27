@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import top.lpepsi.vblog.service.admin.impl.AdminServiceImpl;
 import top.lpepsi.vblog.service.blog.impl.BlogServiceImpl;
 import top.lpepsi.vblog.service.like.impl.LikeServiceImpl;
 import top.lpepsi.vblog.service.user.impl.UserServiceImpl;
@@ -29,6 +30,8 @@ public class QuartzJob extends QuartzJobBean {
     private UserServiceImpl userService;
     @Autowired
     private LikeServiceImpl likeService;
+    @Autowired
+    private AdminServiceImpl adminService;
 
     @Override
     protected void executeInternal(JobExecutionContext context){
@@ -37,6 +40,8 @@ public class QuartzJob extends QuartzJobBean {
             userService.saveUserView2DB();
             likeService.saveUserLiked2DB();
             likeService.saveLikedCount2DB();
+            adminService.updateRecord();
+            adminService.updateRecordView();
         } catch (Exception e) {
             LOGGER.error("定时任务发生异常： "+ Arrays.toString(e.getStackTrace()));
         }

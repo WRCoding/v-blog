@@ -106,16 +106,21 @@ public class AdminServiceImpl implements AdminService {
         tags.forEach(tagDO -> {
             tagNameList.add(tagDO.getTagName());
         });
+        LOGGER.info("tagNameList: "+tagNameList);
+        LOGGER.info("tagNameList.length:  "+tagNameList.size());
         if (result == 1){
-            adminMapper.changTagNum(tagNameList);
+            if (tagNameList.size() != 0){
+                adminMapper.changTagNum(tagNameList);
+                redisUtil.delete(RedisKeyConstant.TAGS);
+                redisUtil.delete(RedisKeyConstant.TAG_BLOG);
+            }
             esBlogService.delete(articleId);
             redisUtil.hashDelete(RedisKeyConstant.BLOG, String.valueOf(articleId));
             redisUtil.listRemove(RedisKeyConstant.BLOG_LIST, String.valueOf(articleId));
             redisUtil.zSetDelete(RedisKeyConstant.VIEW,String.valueOf(articleId));
             redisUtil.delete(RedisKeyConstant.ARCHIVE);
             redisUtil.delete(RedisKeyConstant.ARCHIVE_BLOG);
-            redisUtil.delete(RedisKeyConstant.TAGS);
-            redisUtil.delete(RedisKeyConstant.TAG_BLOG);
+
             return Response.success("删除成功");
         }
         return Response.failure("删除失败");

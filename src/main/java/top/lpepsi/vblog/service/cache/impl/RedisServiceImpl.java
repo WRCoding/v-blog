@@ -14,6 +14,7 @@ import top.lpepsi.vblog.dao.BlogMapper;
 import top.lpepsi.vblog.dto.Blog;
 import top.lpepsi.vblog.dto.Detail;
 import top.lpepsi.vblog.service.cache.RedisService;
+import top.lpepsi.vblog.service.like.impl.LikeServiceImpl;
 import top.lpepsi.vblog.utils.RedisUtil;
 
 import javax.annotation.PostConstruct;
@@ -38,6 +39,9 @@ public class RedisServiceImpl implements RedisService {
 
     @Autowired
     private  RedisTemplate redisTemplate;
+
+    @Autowired
+    private LikeServiceImpl likeService;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -115,7 +119,8 @@ public class RedisServiceImpl implements RedisService {
             }
             List list = redisUtil.listGetRange(RedisKeyConstant.BLOG_LIST, start, end);
             List pagination = (List) list.stream().map(id -> {
-                Detail detail = (Detail) redisUtil.hashGet(RedisKeyConstant.BLOG, String.valueOf(id));
+                Detail detail = getBlogFromRedis(String.valueOf(id));
+                detail.setLikeNum(likeService.getLikedCountByIdFromRedis(Integer.parseInt(String.valueOf(id))));
                 return detail;
             }).collect(Collectors.toList());
             map = new HashMap<>((int)(2/0.75F+1));
