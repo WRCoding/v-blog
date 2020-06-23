@@ -1,0 +1,16 @@
+/* pages/login/login.wxss */
+.container{
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  margin-top: 200rpx;
+}
+.loginForm{
+  margin-top: 77rpx;
+}
+.vAvatar{
+  margin: 0 auto
+}
+.loginBtn{
+  margin-top: 30rpx;
+}

@@ -1,0 +1,41 @@
+<scroll-view scroll-y class="scrollPage">
+  <view class="UCenter-bg">
+    <image src="/images/VIP.png" class="png" mode="widthFix"></image>
+    <view class="text-xl" wx:if="{{isLogin}}">
+      <h1>{{username}}</h1>
+    </view>
+    <button class="cu-btn line" wx:else bindtap="toLogin">登录</button>
+    <image src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif" mode="scaleToFill" class="gif-wave"></image>
+  </view>
+  <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius" wx:if="{{isLogin}}">
+    <view class="cu-item">
+      <view class="content">
+        <text class="cuIcon-read text-grey"></text>
+        <text class="text-grey">博客数</text>
+        <text class="text-grey" style="float:right">{{personalData.blogNum}}篇</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="content">
+        <text class="cuIcon-comment text-grey"></text>
+        <text class="text-grey">评论数</text>
+        <text class="text-grey" style="float:right">{{personalData.commentNum}}个</text>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="content">
+        <text class="cuIcon-global text-grey"></text>
+        <text class="text-grey">访问量</text>
+        <text class="text-grey" style="float:right">{{personalData.viewNum}}次</text>
+      </view>
+    </view>
+    <view class="cu-item" bindtap="logout">
+      <view class="content">
+        <text class="cuIcon-unlock text-grey"></text>
+        <text class="text-grey" >退出</text>
+      </view>
+    </view>
+  </view>
+  <view class="cu-tabbar-height"></view>
+</scroll-view>
+<van-dialog id="van-dialog" />

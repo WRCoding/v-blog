@@ -1,0 +1,27 @@
+/* pages/home/home.wxss */
+.post-like {
+  display: flex;
+  font-size: 26rpx;
+  margin-left: 20rpx;
+  flex-direction: row;
+  align-items: center;
+}
+
+.post-like-image {
+  height: 32rpx;
+  width: 32rpx;
+  margin-right: 16rpx;
+}
+
+.post-like-num {
+  margin-right: 40rpx;
+}
+
+.banner text{
+    position: absolute;
+    bottom:0;
+    left:50%;
+    font-weight: 800;
+    color: white;
+    transform:translateX(-50%);
+}

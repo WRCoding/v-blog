@@ -1,0 +1,19 @@
+<cu-custom bgColor="bg-brown" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">登录</view>
+</cu-custom>
+<view class="container">
+  <view class="cu-avatar xl round vAvatar" style="background-image:url(../../../../images/VIP.png);"></view>
+  <form class="loginForm">
+    <view class="cu-form-group margin-top">
+      <view class="title">邮箱</view>
+      <input placeholder="请输入邮箱" bindinput="inputEmail" value="{{form.username}}"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">密码</view>
+      <input placeholder="请输入密码" password="true" bindinput="inputPwd" value="{{form.password}}"></input>
+    </view>
+  </form>
+  <button class="cu-btn block bg-blue margin-tb-sm lg" disabled="{{isDisabled}}" bindtap="login"  type="">登录</button>
+  <van-toast id="van-toast" />
+</view>

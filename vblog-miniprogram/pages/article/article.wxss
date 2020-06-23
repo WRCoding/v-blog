@@ -1,0 +1,10 @@
+/* pages/article/article.wxss */
+@import'/towxml/style/main.wxss';
+.commentBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+page{
+  margin-bottom: 60rpx;
+}

@@ -1,0 +1,41 @@
+<cu-custom bgColor="bg-brown" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">全部评论</view>
+</cu-custom>
+<scroll-view scroll-y="{{true}}">
+  <view class="cu-list menu-avatar comment solids-top">
+    <view class="cu-item" wx:for="{{comments}}" wx:for-item="comment">
+      <view class="cu-avatar radius" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg);"></view>
+      <view class="content">
+        <view class="text-grey">{{comment.commentName}}
+          <text class="text-blue margin-left-sm" style="float:right" data-name="{{comment.commentName}}" data-commentId="{{comment.id}}" bindtap="saveReplyComment">回复</text>
+        </view>
+        <view class="text-gray text-content text-df">{{comment.comment}}</view>
+        <!-- 子评论 -->
+        <view wx:if="{{comment.childComments.length > 0 }}">
+          <view class="bg-grey padding-sm radius margin-top-sm  text-sm" wx:for="{{comment.childComments}}" wx:for-item="childComment">
+            <view class="commentBox">
+              <view>{{childComment.commentName}}@{{childComment.replyName}}：
+                <text class="text-blue margin-left-sm" data-name="{{childComment.commentName}}" data-commentId="{{comment.id}}" style="float:right" bindtap="saveReplyComment">回复</text>
+              </view>
+              <view class="flex-sub">{{childComment.comment}}
+              </view>
+              <view class="text-gray text-df" style="margin-left:auto;">{{childComment.createBy}}</view>
+            </view>
+          </view>
+        </view>
+        <view class="margin-top-sm flex justify-between">
+          <view class="text-gray text-df">{{comment.createBy}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>
+<view class="cu-bar foot input {{InputBottom!=0?'cur':''}}" style="bottom:{{InputBottom}}px">
+  <input class="solid-bottom" bindinput="commentData" adjust-position="{{true}}" maxlength="300" cursor-spacing="10" placeholder="{{placeholder}}" value="{{comment}}"></input>
+  <button class="cu-btn bg-{{isLogin?'green':'red'}} shadow"  bindtap="saveComment">
+    <text wx:if="{{isLogin}}">发送</text>
+    <text wx:else>登录</text>
+  </button>
+</view>
+<van-toast id="van-toast" />

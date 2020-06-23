@@ -1,0 +1,20 @@
+<cu-custom bgColor="bg-brown" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">搜索</view>
+</cu-custom>
+<view class="solids-bottom padding-xs flex align-center">
+  <view class="flex-sub text-center">
+    <view class="text-df padding">
+      <text class="text-brown" wx:if="{{length == 0}}">没有符合的结果</text>
+      <text class="text-brown" wx:else>搜索：{{length}}条 （搜索结果包括作者，题目或者内容）</text>
+    </view>
+  </view>
+</view>
+<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
+  <view class="cu-item arrow" wx:for="{{blogList}}" wx:for-item="blog" wx:key="blog.id" bindtap="toArticle" data-id="{{blog.id}}">
+    <view class="content">
+      <text class="cuIcon-read text-grey"></text>
+      <text class="text-grey">{{blog.articleTitle}}</text>
+    </view>
+  </view>
+</view>

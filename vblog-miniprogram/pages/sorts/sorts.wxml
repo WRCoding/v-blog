@@ -1,0 +1,22 @@
+<!-- pages/sorts/sorts.wxml -->
+<cu-custom bgColor="bg-brown">
+  <view slot="content">标签</view>
+</cu-custom>
+<view class="cu-bar bg-white solid-bottom">
+  <view class="action">
+    <text class="cuIcon-titles text-orange"></text> 标签
+  </view>
+</view>
+<scroll-view scroll-x class="bg-white nav" scroll-with-animation scroll-left="{{scrollLeft}}">
+  <view class="cu-item {{index==TabCur?'text-green cur':''}}" wx:for="{{tagList}}" wx:for-item="tag" wx:key="tag.id" bindtap="tabSelect" data-id="{{index}}" data-tagName="{{tag.tagName}}">
+    {{tag.tagName}}
+  </view>
+</scroll-view>
+<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
+  <view class="cu-item arrow" wx:for="{{blogWithTagList}}" wx:for-item="blog" wx:key="blog.id" bindtap="toArticle" data-id="{{blog.id}}">
+    <view class="content">
+      <text class="cuIcon-read text-grey"></text>
+      <text class="text-grey">{{blog.articleTitle}}</text>
+    </view>
+  </view>
+</view>

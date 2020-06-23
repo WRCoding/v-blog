@@ -1,0 +1,8 @@
+/* pages/comment/comment.wxss */
+.commentBox{
+    display: flex;
+    flex-direction: column;
+}
+page{
+  margin-bottom: 60rpx;
+}

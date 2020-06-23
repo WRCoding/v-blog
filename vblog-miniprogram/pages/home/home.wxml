@@ -1,0 +1,41 @@
+<cu-custom bgColor="bg-brown">
+  <view slot="content">首页</view>
+</cu-custom>
+<scroll-view scroll-y="true" style="height: {{winH}}px" bindscrolltolower="onBindscrolltolower">
+  <swiper class="screen-swiper {{DotStyle?'square-dot':'round-dot'}}" indicator-dots="true" circular="true" autoplay="true" interval="5000" duration="500">
+    <swiper-item wx:for="{{swiperList}}" wx:key="index">
+      <image src="{{item.url}}" mode="aspectFill" wx:if="{{item.type=='image'}}"></image>
+      <video src="{{item.url}}" autoplay loop muted show-play-btn="{{false}}" controls="{{false}}" objectFit="cover" wx:if="{{item.type=='video'}}"></video>
+    </swiper-item>
+  </swiper>
+  <view class="cu-bar bg-white search fixed" style="top:{{CustomBar}}px">
+    <view class="search-form round">
+      <text class="cuIcon-search"></text>
+      <input type="text" placeholder="搜索文章" confirm-type="search" bindconfirm="searchBlog" bindinput="searchKey" value="{{key}}"></input>
+    </view>
+  </view>
+  <view class="cu-card dynamic ">
+    <view class="cu-item shadow" wx:for="{{blogList}}" wx:for-item="blog" bindtap="toArticle" data-id="{{blog.id}}" wx:key="{{blog.id}}">
+      <view class="cu-list menu-avatar">
+        <view class="cu-item">
+          <view class="cu-avatar round bg-brown">
+            <text>{{blog.author}}</text>
+          </view>
+          <view class="content flex-sub">
+            <view>{{blog.author}}</view>
+            <view class="text-gray text-sm flex justify-between">{{blog.createBy}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="text-content" style="font-weight:700">{{blog.articleTitle}}</view>
+      <view class="grid flex-sub padding-lr col-3 grid-square">
+        <view class="bg-img {{isCard?'':'only-img'}}" style="background-image:url({{blog.titleImage}});" wx:for="{{isCard?9:1}}" wx:key="{{index}}"></view>
+      </view>
+      <view class="text-gray text-sm text-right padding">
+        <text class="cu-tag bg-blue light sm round" wx:for="{{blog.tags}}" wx:for-item="tag" wx:key="tag.id">{{tag.tagName}}</text>
+        <text class="cuIcon-attentionfill margin-lr-xs"></text> {{blog.likeNum}}
+        <text class="cuIcon-appreciatefill margin-lr-xs"></text> {{blog.articleViews}}
+      </view>
+    </view>
+  </view>
+</scroll-view>
