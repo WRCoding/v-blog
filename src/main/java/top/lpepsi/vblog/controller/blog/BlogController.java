@@ -1,24 +1,15 @@
 package top.lpepsi.vblog.controller.blog;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
-import org.apache.commons.beanutils.BeanUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import top.lpepsi.vblog.controller.loginandreg.LoginAndRegController;
-import top.lpepsi.vblog.dao.BlogMapper;
-import top.lpepsi.vblog.dto.Blog;
 import top.lpepsi.vblog.dto.Detail;
 import top.lpepsi.vblog.dto.Edit;
 import top.lpepsi.vblog.dto.Response;
-import top.lpepsi.vblog.service.admin.AdminService;
 import top.lpepsi.vblog.service.blog.impl.BlogServiceImpl;
-import top.lpepsi.vblog.vdo.ArticleDO;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,11 +26,6 @@ public class BlogController {
     @Autowired
     private BlogServiceImpl blogService;
 
-    @Autowired
-    private BlogMapper blogMapper;
-
-    @Autowired
-    private AdminService adminService;
 
 
     @GetMapping("/blogs")

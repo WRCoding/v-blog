@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
             String username = (String) redisUtil.valueGet(code);
             updateStatus(username);
             redisUtil.delete(code);
-            redisUtil.zSetPut(RedisKeyConstant.USER_VIEW, username, 1D);
+            redisUtil.zSetPut(RedisKeyConstant.USER_VIEW, username, 0D);
             return Response.success();
         }else {
             String[] strs = code.split("\\*");
