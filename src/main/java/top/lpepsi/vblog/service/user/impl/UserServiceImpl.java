@@ -3,12 +3,15 @@ package top.lpepsi.vblog.service.user.impl;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.lpepsi.vblog.config.RabbitmqConfig;
 import top.lpepsi.vblog.constant.RedisKeyConstant;
 import top.lpepsi.vblog.dao.UserMapper;
 import top.lpepsi.vblog.dto.Response;
@@ -47,18 +50,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @Override
     public Response register(UserDO userDO) {
         try {
             userDO.setRole("ROLE_USER");
+            userDO.setStatus(1);
             userDO.setPassword(new BCryptPasswordEncoder().encode(userDO.getPassword()));
             int count = userMapper.register(userDO);
             if (count == 1) {
-                if (sendEmail(userDO.getEmail(), userDO.getUserName()) == 1){
-                    return Response.success("注册成功,请前往邮箱激活账号");
-                }else {
-                    return Response.failure("注册失败,邮箱不存在");
-                }
+                redisUtil.zSetPut(RedisKeyConstant.USER_VIEW, userDO.getUserName(), 0D);
+                return Response.success("注册成功");
             } else {
                 return Response.failure("注册失败");
             }
@@ -80,53 +84,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int sendEmail(String email, String username) {
-        if (email == null) {
-            email = getEmailByUserName(username);
-        }
-        String uuid = UUID.randomUUID().toString();
-        String activeCode = uuid + "*" + username + "*" + email;
-        String address = email;
-        Future<Integer> submit = threadPool.submit(() -> {
-            try {
-                redisUtil.valuePut(activeCode, username,60*5L,TimeUnit.SECONDS);
-                mailUtil.sendMail(address, activeCode);
-                return 1;
-            } catch (MailException e) {
-                redisUtil.delete(activeCode);
-                LOGGER.error("邮箱不存在： "+e.getMessage());
-                return 0;
-            }
-        });
-        int success = 1;
+    @RabbitListener(queues = RabbitmqConfig.QUEUE)
+    public void sendEmail(String message) {
+        int captcha = (int) ((Math.random()*9+1)*1000);
+        LOGGER.info("message: "+message+", captcha: "+captcha);
+//        String username = message.getUserName();
+//        String email = message.getEmail();
+//        if (email == null) {
+//            email = getEmailByUserName(username);
+//        }
+//        String uuid = UUID.randomUUID().toString();
+//        String activeCode = uuid + "*" + username + "*" + email;
+//        String address = email;
         try {
-            success = submit.get();
-            LOGGER.info("success: "+success);
-        } catch (Exception e) {
-            LOGGER.error("Exception: "+e.getMessage());
+            redisUtil.valuePut(String.valueOf(captcha), message,60*5L,TimeUnit.SECONDS);
+            mailUtil.sendMail(message, String.valueOf(captcha));
+        } catch (MailException | MessagingException e) {
+            redisUtil.delete(String.valueOf(captcha));
+            LOGGER.error("邮箱发送失败： "+e.getMessage());
         }
-        return success;
     }
 
     @Override
     public Response activeCode(String code) {
-        if (redisUtil.hasKey(code)){
-            String username = (String) redisUtil.valueGet(code);
-            updateStatus(username);
-            redisUtil.delete(code);
-            redisUtil.zSetPut(RedisKeyConstant.USER_VIEW, username, 0D);
+        boolean hasKey = redisUtil.hasKey(code);
+        LOGGER.info("haskey: "+hasKey);
+        if (hasKey){
+//            String email = (String) redisUtil.valueGet(code);
+//            redisUtil.delete(code);
             return Response.success();
         }else {
-            String[] strs = code.split("\\*");
-            for (String str : strs) {
-                System.out.println(str);
-            }
-            String username = strs[1];
-            String email = strs[2];
-            HashMap<String,String> info = new HashMap<>(2);
-            info.put("username", username);
-            info.put("email", email);
-            return Response.failure(info);
+            return Response.failure("验证码不正确");
         }
     }
 
@@ -151,5 +139,11 @@ public class UserServiceImpl implements UserService {
         }else {
             return Response.failure();
         }
+    }
+
+    @Override
+    public Response captcha(String emailAddress) {
+        rabbitTemplate.convertAndSend(RabbitmqConfig.EXCHANGE,RabbitmqConfig.ROUTE_KEY, emailAddress);
+        return Response.success("验证码已经发送");
     }
 }

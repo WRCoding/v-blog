@@ -31,13 +31,13 @@ public class MailUtil {
     private JavaMailSenderImpl mailSender;
 
     public void sendMail(String to, String message) throws MessagingException {
-            String address = " http://localhost:8777/statusCode?code="+message;
+//            String address = " http://localhost:8777/statusCode?code="+message;
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true);
-            mimeMessageHelper.setSubject("激活账号");
+            mimeMessageHelper.setSubject("VBLOG-验证码");
             mimeMessageHelper.setFrom(FROM);
             mimeMessageHelper.setTo(to);
-            mimeMessageHelper.setText("点击完成激活账号，激活码的有效时间为五分钟，只有账号激活才能使用其他功能，<a href = "+address+">激活账号</a>",true);
+            mimeMessageHelper.setText("验证码为： "+message+"， 五分钟内有效");
             mailSender.send(mimeMessage);
     }
 

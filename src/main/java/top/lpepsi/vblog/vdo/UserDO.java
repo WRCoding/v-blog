@@ -1,6 +1,7 @@
 package top.lpepsi.vblog.vdo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,6 +16,7 @@ import java.util.Date;
  * @create: 2020-02-15 11:54
  **/
 @Data
+@NoArgsConstructor
 public class UserDO implements Serializable {
     private static final long serialVersionUID = 9115484650221598201L;
 
@@ -25,6 +27,8 @@ public class UserDO implements Serializable {
     private String role;
     private Integer status;
     private Date createBy;
+
+
 
     public UserDO(String email, String password, String userName) {
         this.email = email;

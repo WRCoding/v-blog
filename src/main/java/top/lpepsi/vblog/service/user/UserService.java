@@ -39,13 +39,13 @@ public interface UserService {
     void updateStatus(String username);
 
     /**
-    * @Description:
+    * @Description: 发送邮件
     * @Param: [email, activeCode]
     * @return: void
     * @Author: 林北
     * @Date: 2020-02-18
     */
-    int sendEmail(String email,String username);
+    void sendEmail(String message);
 
     /**
     * @Description: 激活账号
@@ -73,4 +73,14 @@ public interface UserService {
     * @Date: 2020-02-29
     */
     Response checkInfo(String email,String name);
+
+
+    /**
+    * @Description: 发送验证码到指定邮箱
+    * @Param: [emailAddress]
+    * @return: top.lpepsi.vblog.dto.Response
+    * @Author: 林北
+    * @Date: 2020-07-13
+    */
+    Response captcha(String emailAddress);
 }

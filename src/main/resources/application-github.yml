@@ -38,6 +38,10 @@ spring:
       cluster-nodes: 127.0.0.1:9301,127.0.0.1:9302,127.0.0.1:9303
       repositories:
         enabled: true
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

@@ -7,7 +7,7 @@
       select * from blog_user where email = #{userName}
     </select>
     <insert id="register" parameterType="userDo">
-        INSERT INTO blog_user ( email, password, username, role )VALUES(#{email},#{password},#{userName},#{role})
+        INSERT INTO blog_user ( email, password, username, role ,status)VALUES(#{email},#{password},#{userName},#{role},#{status})
     </insert>
     <select id="getEmailByUserName" parameterType="string" resultType="string">
         SELECT email FROM blog_user WHERE username = #{username}

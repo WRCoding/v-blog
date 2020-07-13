@@ -36,21 +36,26 @@ public class LoginAndRegController {
 
     @PostMapping("/register")
     @ResponseBody
-    public Response register(@RequestParam("email")String email,@RequestParam("username")String username,@RequestParam("password")String password){
-        UserDO userDO = new UserDO(email, password, username);
-        LOGGER.info("userDO: "+userDO);
+    public Response register(@RequestBody UserDO userDO){
+//        UserDO userDO = new UserDO(email, password, username);
         return userService.register(userDO);
     }
-    @PostMapping("/activate")
-    @ResponseBody
-    public Response<Integer> activate(@RequestParam("email")String email,@RequestParam("username") String username,@RequestParam("password")String password) {
-        int success = userService.sendEmail(email, username);
-        return Response.success(success);
-    }
+//    @PostMapping("/activate")
+//    @ResponseBody
+//    public Response<Integer> activate(@RequestParam("email")String email,@RequestParam("username") String username,@RequestParam("password")String password) {
+//        int success = userService.sendEmail(email, username);
+//        return Response.success(success);
+//    }
     @GetMapping("/activeCode")
     @ResponseBody
     public Response activeCode(String code){
         return userService.activeCode(code);
+    }
+
+    @GetMapping("/captcha")
+    @ResponseBody
+    public Response captcha(@RequestParam("emailAddress") String emailAddress){
+        return userService.captcha(emailAddress);
     }
 
     @PostMapping("/check")
