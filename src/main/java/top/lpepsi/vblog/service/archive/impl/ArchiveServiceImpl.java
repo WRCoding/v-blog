@@ -38,19 +38,25 @@ public class ArchiveServiceImpl implements ArchiveService {
     @Override
     public Response getYear() {
         try {
-            if (!redisUtil.hasKey(RedisKeyConstant.ARCHIVE)){
-                redisUtil.listLeftPushAll(RedisKeyConstant.ARCHIVE, archiveMapper.getYear());
+            List<Integer> yearList = archiveMapper.getYear();
+            if (yearList.size() > 0){
+                if (!redisUtil.hasKey(RedisKeyConstant.ARCHIVE)){
+                    redisUtil.listLeftPushAll(RedisKeyConstant.ARCHIVE, yearList);
+                }
+                List<Integer> list = redisUtil.listGetAll(RedisKeyConstant.ARCHIVE);
+                if (list.size() > 0){
+                    list.forEach(year -> {
+                        List<Detail> blogsByYear = archiveMapper.getBlogsByYear(year);
+                        redisUtil.hashPut(RedisKeyConstant.ARCHIVE_BLOG, String.valueOf(year), blogsByYear);
+                    });
+                }
+                return Response.success(list);
             }
-            List<Integer> list = redisUtil.listGetAll(RedisKeyConstant.ARCHIVE);
-            list.forEach(year -> {
-                List<Detail> blogsByYear = archiveMapper.getBlogsByYear(year);
-                redisUtil.hashPut(RedisKeyConstant.ARCHIVE_BLOG, String.valueOf(year), blogsByYear);
-            });
-            return Response.success(list);
         }catch (Exception e){
             log.error("getYear发生异常： "+e.getMessage());
+            return Response.failure("获取归档失败");
         }
-        return Response.failure("获取归档失败");
+        return Response.success();
     }
 
     @Override

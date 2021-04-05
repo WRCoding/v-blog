@@ -42,7 +42,6 @@ public class AliyunOssController {
     @RequestMapping("/upload")
     @ResponseBody
     public Response upLoad(@RequestParam("file") MultipartFile file) {
-        System.out.println(file);
         String filename = file.getOriginalFilename();
         Response response = new Response();
         System.out.println(filename);

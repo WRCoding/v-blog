@@ -46,7 +46,7 @@ public class EsBlogServiceImpl implements EsBlogService {
     }
 
     @Override
-    public List<Detail> searech(String keyWord) {
+    public List<Detail> search(String keyWord) {
 //        Pageable pageable = PageRequest.of(pageNum, pageSize);
         return repository.findByAuthorOrArticleTitleOrArticleContent(keyWord,keyWord,keyWord);
     }

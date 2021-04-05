@@ -45,7 +45,7 @@ public class BlogController {
 
     @PostMapping("/article")
     @ResponseBody
-    public Response createBlog(@RequestBody Edit edit){
+    public Response saveBlog(@RequestBody Edit edit){
         return blogService.saveBlog2DB(edit);
     }
 

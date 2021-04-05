@@ -14,6 +14,8 @@ public class Response<T> {
     private String message;
     private T data;
 
+
+
     /**
     * @Description: 成功无返回数据
     * @Param: [resultCode]
@@ -68,6 +70,11 @@ public class Response<T> {
     }
 
     public Response() {
+    }
+
+    public Response(ResultCode resultCode) {
+        this.code = resultCode.getCode();
+        this.message = resultCode.getMessage();
     }
 
     public Response(Integer code, String message) {

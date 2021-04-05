@@ -17,9 +17,9 @@ public interface BlogSearchRepository extends ElasticsearchRepository<Detail,Int
     /**
     * @Description: 搜索查询，根据作者，标题，内容搜索
     * @Param: [author, articleTtile, articleContent]
-    * @return: java.util.List<top.lpepsi.vblog.vdo.document.ArticleDocument>
+    * @return: java.util.List<top.lpepsi.vblog.vdo.document.ArticleDocument>t
     * @Author: 林北
     * @Date: 2020-03-01
     */
-    List<Detail> findByAuthorOrArticleTitleOrArticleContent(String author, String articleTtile, String articleContent);
+    List<Detail> findByAuthorOrArticleTitleOrArticleContent(String author, String articleTile, String articleContent);
 }

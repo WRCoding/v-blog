@@ -30,7 +30,7 @@ public class SearchController {
     public Response search(@RequestParam(required = false) String keyWord,
                            @RequestParam(required = false,defaultValue = "0") Integer pageNum,
                            @RequestParam(required = false,defaultValue = "4") Integer pageSize){
-        List<Detail> search = esBlogService.searech(keyWord);
+        List<Detail> search = esBlogService.search(keyWord);
         return Response.success(search);
     }
 }

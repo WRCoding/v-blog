@@ -40,7 +40,7 @@ public interface EsBlogService {
     * @Author: 林北
     * @Date: 2020-03-01
     */
-    List<Detail> searech(String keyWord);
+    List<Detail> search(String keyWord);
     
     /**
     * @Description: 从ES删除博客

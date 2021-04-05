@@ -19,6 +19,7 @@ import top.lpepsi.vblog.jwt.JwtLoginFilter;
 import top.lpepsi.vblog.service.user.UserService;
 import top.lpepsi.vblog.utils.MailUtil;
 import top.lpepsi.vblog.utils.RedisUtil;
+import top.lpepsi.vblog.vdo.ResultCode;
 import top.lpepsi.vblog.vdo.UserDO;
 
 import javax.mail.MessagingException;
@@ -88,14 +89,6 @@ public class UserServiceImpl implements UserService {
     public void sendEmail(String message) {
         int captcha = (int) ((Math.random()*9+1)*1000);
         LOGGER.info("message: "+message+", captcha: "+captcha);
-//        String username = message.getUserName();
-//        String email = message.getEmail();
-//        if (email == null) {
-//            email = getEmailByUserName(username);
-//        }
-//        String uuid = UUID.randomUUID().toString();
-//        String activeCode = uuid + "*" + username + "*" + email;
-//        String address = email;
         try {
             redisUtil.valuePut(String.valueOf(captcha), message,60*5L,TimeUnit.SECONDS);
             mailUtil.sendMail(message, String.valueOf(captcha));
@@ -109,12 +102,12 @@ public class UserServiceImpl implements UserService {
     public Response activeCode(String code) {
         boolean hasKey = redisUtil.hasKey(code);
         LOGGER.info("haskey: "+hasKey);
+        //如果code存在，则证明验证成功
         if (hasKey){
-//            String email = (String) redisUtil.valueGet(code);
-//            redisUtil.delete(code);
+            redisUtil.delete(code);
             return Response.success();
         }else {
-            return Response.failure("验证码不正确");
+            return new Response(ResultCode.INVALID_CAPTCHA);
         }
     }
 

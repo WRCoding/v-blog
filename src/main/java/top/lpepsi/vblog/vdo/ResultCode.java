@@ -27,7 +27,12 @@ public enum ResultCode {
     /**
      * 参数无效
      */
-    INVALID_ARGUMENT(5007,"参数无效")
+    INVALID_ARGUMENT(5007,"参数无效"),
+
+    /**
+     * @Author 验证码错误
+     **/
+    INVALID_CAPTCHA(10001,"验证码错误")
     ;
     private Integer code;
     private String message;

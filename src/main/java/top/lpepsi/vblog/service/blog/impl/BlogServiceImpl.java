@@ -9,6 +9,7 @@ import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import top.lpepsi.vblog.constant.RedisKeyConstant;
 import top.lpepsi.vblog.dao.BlogMapper;
 import top.lpepsi.vblog.dto.Blog;
@@ -101,27 +102,29 @@ public class BlogServiceImpl implements BlogService {
     public Response<String> saveBlog2DB(Edit edit) {
         if (null == edit){
             LOGGER.error("edit为空");
-        }
-        ReentrantLock lock = new ReentrantLock();
-        lock.lock();
-        try {
-            blogMapper.saveBlog2DB(edit);
-            Integer articleId = edit.getId();
-            blogMapper.saveContent2DB(edit);
-            blogMapper.saveImage2DB(edit);
-            for (String tag : edit.getTagArray()) {
-                TagDO tagDO = new TagDO(tag);
-                LOGGER.info("tagDO: "+tagDO.toString());
-                int tagId = tagService.saveTag2DB(tagDO,edit);
-                tagService.tagToArticle(tagId, articleId);
+            return Response.failure("edit为空,发布失败");
+        }else{
+            try {
+                blogMapper.saveBlog2DB(edit);
+                Integer articleId = edit.getId();
+                blogMapper.saveContent2DB(edit);
+                if (!ObjectUtils.isEmpty(edit.getTitleImageUrl())){
+                    blogMapper.saveImage2DB(edit);
+                }
+                if (!ObjectUtils.isEmpty(edit.getTagArray())){
+                    for (String tag : edit.getTagArray()) {
+                        TagDO tagDO = new TagDO(tag);
+                        LOGGER.info("tagDO: "+tagDO.toString());
+                        int tagId = tagService.saveTag2DB(tagDO,edit);
+                        tagService.tagToArticle(tagId, articleId);
+                    }
+                }
+                saveBlog2Redis(blogMapper.findBlog(articleId));
+                return Response.success("发布成功");
+            } catch (Exception e) {
+                LOGGER.error("保存博客出错："+e.getMessage());
+                return Response.failure("发布失败");
             }
-            saveBlog2Redis(blogMapper.findBlog(articleId));
-            return Response.success("发布成功");
-        } catch (Exception e) {
-           LOGGER.error("保存博客出错："+e.getMessage());
-           return Response.failure("发布失败");
-        }finally {
-            lock.unlock();
         }
     }
 

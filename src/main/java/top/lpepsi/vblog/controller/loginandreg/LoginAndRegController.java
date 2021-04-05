@@ -38,6 +38,7 @@ public class LoginAndRegController {
     @ResponseBody
     public Response register(@RequestBody UserDO userDO){
 //        UserDO userDO = new UserDO(email, password, username);
+        LOGGER.info("userInfo: {}",userDO.toString());
         return userService.register(userDO);
     }
 //    @PostMapping("/activate")

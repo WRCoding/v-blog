@@ -75,21 +75,25 @@ public class TagServiceImpl implements TagService {
     @Override
     public Response getTags() {
         try {
-            if (!redisUtil.hasKey(RedisKeyConstant.TAGS)){
-                    redisUtil.listLeftPushAll(RedisKeyConstant.TAGS, tagMapper.getTags());
+            List<TagDO> tags = tagMapper.getTags();
+            if (tags.size() > 0){
+                if (!redisUtil.hasKey(RedisKeyConstant.TAGS)){
+                    redisUtil.listLeftPushAll(RedisKeyConstant.TAGS, tags);
+                }
+                List<TagDO> list = redisUtil.listGetAll(RedisKeyConstant.TAGS);
+                if (list.size() > 0){
+                    list.forEach(tagDO -> {
+                        List<Detail> blogByTagName = blogMapper.findBlogByTagName(tagDO.getTagName());
+                        redisUtil.hashPut(RedisKeyConstant.TAG_BLOG, tagDO.getTagName().toLowerCase(), blogByTagName);
+                    });
+                }
+                return Response.success(list);
             }
-            List<TagDO> list = redisUtil.listGetAll(RedisKeyConstant.TAGS);
-            list.forEach(tagDO -> {
-                    List<Detail> blogByTagName = blogMapper.findBlogByTagName(tagDO.getTagName());
-                    redisUtil.hashPut(RedisKeyConstant.TAG_BLOG, tagDO.getTagName().toLowerCase(), blogByTagName);
-                });
-
-            return Response.success(list);
         } catch (Exception e) {
             LOGGER.error("getTags发生异常："+e.getMessage());
+            return Response.failure("获取标签失败");
         }
-
-        return Response.failure("获取标签失败");
+        return Response.success();
     }
 
     @Override
